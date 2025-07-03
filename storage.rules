@@ -1,0 +1,74 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Función para verificar si el usuario está autenticado
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Función para verificar si es el propietario
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // Función para verificar si es instructor
+    function isInstructor() {
+      return isAuthenticated() && 
+        request.auth.token.userType == 'instructor';
+    }
+    
+    // Función para validar imágenes
+    function isValidImage() {
+      return request.resource.contentType.matches('image/.*') &&
+        request.resource.size < 5 * 1024 * 1024; // 5MB máximo
+    }
+    
+    // Función para validar videos
+    function isValidVideo() {
+      return request.resource.contentType.matches('video/.*') &&
+        request.resource.size < 50 * 1024 * 1024; // 50MB máximo
+    }
+    
+    // Imágenes de perfil
+    match /profile_images/{userId}/{allPaths=**} {
+      allow read: if isAuthenticated();
+      allow write: if isOwner(userId) && isValidImage();
+    }
+    
+    // Imágenes de series
+    match /series_images/{seriesId}/{allPaths=**} {
+      allow read: if isAuthenticated();
+      allow write: if isInstructor() && isValidImage();
+    }
+    
+    // Imágenes de sesiones
+    match /session_images/{sessionId}/{allPaths=**} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && isValidImage();
+    }
+    
+    // Imágenes de posturas
+    match /posture_images/{postureId}/{allPaths=**} {
+      allow read: if isAuthenticated();
+      allow write: if isInstructor() && isValidImage();
+    }
+    
+    // Videos de posturas
+    match /posture_videos/{postureId}/{allPaths=**} {
+      allow read: if isAuthenticated();
+      allow write: if isInstructor() && isValidVideo();
+    }
+    
+    // Archivos públicos (logos, etc.)
+    match /public/{allPaths=**} {
+      allow read: if true;
+      allow write: if false; // Solo administradores
+    }
+    
+    // Exportaciones
+    match /exports/{userId}/{allPaths=**} {
+      allow read: if isOwner(userId) || isInstructor();
+      allow write: if isOwner(userId) || isInstructor();
+    }
+  }
+}

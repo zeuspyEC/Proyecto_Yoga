@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - SoftZen Firebase</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #6B46C1;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .success {
+            background: #48BB78;
+            color: white;
+        }
+        .error {
+            background: #F56565;
+            color: white;
+        }
+        .pending {
+            background: #ED8936;
+            color: white;
+        }
+        button {
+            background: #6B46C1;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #553C9A;
+        }
+        .log {
+            background: #f7f7f7;
+            padding: 10px;
+            margin-top: 20px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧘‍♀️ SoftZen - Test de Conexión</h1>
+        
+        <h2>Estado de Servicios:</h2>
+        <div id="firebase-status" class="status pending">Firebase: Verificando...</div>
+        <div id="backend-status" class="status pending">Backend API: Verificando...</div>
+        <div id="auth-status" class="status pending">Autenticación: No iniciada</div>
+        
+        <h2>Pruebas de Funcionalidad:</h2>
+        <button onclick="testFirebase()">Test Firebase</button>
+        <button onclick="testBackend()">Test Backend API</button>
+        <button onclick="testLogin()">Test Login Demo</button>
+        <button onclick="testTherapies()">Test Cargar Terapias</button>
+        
+        <h3>Log de Actividad:</h3>
+        <div id="log" class="log"></div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    
+    <script>
+        // Logger
+        function log(message, type = 'info') {
+            const logEl = document.getElementById('log');
+            const time = new Date().toLocaleTimeString();
+            const color = type === 'error' ? 'red' : type === 'success' ? 'green' : 'black';
+            logEl.innerHTML += `<div style="color: ${color}">[${time}] ${message}</div>`;
+            logEl.scrollTop = logEl.scrollHeight;
+            console.log(`[${type}]`, message);
+        }
+
+        // Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyBJeqVMFusCntqBhA5RLlM5XSgsV_hOf38",
+            authDomain: "pagina-yoga.firebaseapp.com",
+            projectId: "pagina-yoga",
+            storageBucket: "pagina-yoga.firebasestorage.app",
+            messagingSenderId: "292008599562",
+            appId: "1:292008599562:web:6b9a8e795306e32c7dbff3"
+        };
+
+        // Inicializar Firebase
+        try {
+            firebase.initializeApp(firebaseConfig);
+            document.getElementById('firebase-status').className = 'status success';
+            document.getElementById('firebase-status').textContent = 'Firebase: ✅ Conectado';
+            log('Firebase inicializado correctamente', 'success');
+        } catch (error) {
+            document.getElementById('firebase-status').className = 'status error';
+            document.getElementById('firebase-status').textContent = 'Firebase: ❌ Error';
+            log('Error inicializando Firebase: ' + error.message, 'error');
+        }
+
+        // Test Firebase
+        async function testFirebase() {
+            log('Iniciando test de Firebase...');
+            try {
+                // Test Firestore
+                const testDoc = await firebase.firestore().collection('test').add({
+                    test: true,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                log('✅ Firestore funcionando - Doc ID: ' + testDoc.id, 'success');
+                
+                // Limpiar
+                await testDoc.delete();
+                log('Documento de prueba eliminado');
+            } catch (error) {
+                log('❌ Error en Firebase: ' + error.message, 'error');
+            }
+        }
+
+        // Test Backend
+        async function testBackend() {
+            log('Iniciando test del backend...');
+            try {
+                const response = await fetch('http://localhost:3001/api/health');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    document.getElementById('backend-status').className = 'status success';
+                    document.getElementById('backend-status').textContent = 'Backend API: ✅ Conectado';
+                    log('✅ Backend respondiendo: ' + JSON.stringify(data), 'success');
+                } else {
+                    throw new Error('Respuesta no OK');
+                }
+            } catch (error) {
+                document.getElementById('backend-status').className = 'status error';
+                document.getElementById('backend-status').textContent = 'Backend API: ❌ Sin conexión';
+                log('❌ Error conectando al backend: ' + error.message, 'error');
+            }
+        }
+
+        // Test Login
+        async function testLogin() {
+            log('Iniciando test de login...');
+            try {
+                const result = await firebase.auth().signInWithEmailAndPassword(
+                    'admin@softzen.com',
+                    'SoftZen2024'
+                );
+                
+                document.getElementById('auth-status').className = 'status success';
+                document.getElementById('auth-status').textContent = 'Autenticación: ✅ Usuario conectado';
+                log('✅ Login exitoso: ' + result.user.email, 'success');
+                
+                // Obtener token
+                const token = await result.user.getIdToken();
+                log('Token obtenido: ' + token.substring(0, 20) + '...', 'success');
+            } catch (error) {
+                document.getElementById('auth-status').className = 'status error';
+                document.getElementById('auth-status').textContent = 'Autenticación: ❌ Error';
+                log('❌ Error en login: ' + error.message, 'error');
+            }
+        }
+
+        // Test Cargar Terapias
+        async function testTherapies() {
+            log('Cargando terapias del backend...');
+            try {
+                const response = await fetch('http://localhost:3001/api/therapies');
+                const therapies = await response.json();
+                
+                if (response.ok) {
+                    log(`✅ ${therapies.length} terapias encontradas:`, 'success');
+                    therapies.forEach(therapy => {
+                        log(`  - ${therapy.name} (${therapy.duration} min)`, 'success');
+                    });
+                } else {
+                    throw new Error('Error al cargar terapias');
+                }
+            } catch (error) {
+                log('❌ Error cargando terapias: ' + error.message, 'error');
+            }
+        }
+
+        // Test inicial al cargar
+        window.addEventListener('load', () => {
+            log('Página de test cargada');
+            testBackend();
+        });
+
+        // Listener de autenticación
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                document.getElementById('auth-status').className = 'status success';
+                document.getElementById('auth-status').textContent = `Autenticación: ✅ ${user.email}`;
+                log('Usuario autenticado: ' + user.email);
+            } else {
+                document.getElementById('auth-status').className = 'status pending';
+                document.getElementById('auth-status').textContent = 'Autenticación: No iniciada';
+                log('Usuario no autenticado');
+            }
+        });
+    </script>
+</body>
+</html>

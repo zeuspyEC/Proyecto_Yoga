@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#6B46C1">
+    <title>SoftZen - Yoga Terapéutico Optimizado</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="/img/icon-192.png">
+    
+    <!-- Firebase SDK v8 -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+    
+    <!-- Service Worker -->
+    <script type="module">
+        // Registrar Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('[SW] Registrado'))
+                    .catch(err => console.error('[SW] Error:', err));
+            });
+        }
+    </script>
+</head>
+<body>
+    <div id="app">
+        <!-- Pantalla de Carga -->
+        <div id="loadingScreen" class="loading-screen">
+            <div class="loading-content">
+                <div class="logo-loading">🧘‍♀️</div>
+                <h1 class="loading-title">SoftZen</h1>
+                <div class="loading-spinner"></div>
+                <p class="loading-text">Cargando tu espacio de bienestar...</p>
+            </div>
+        </div>
+
+        <!-- Contenedor de Autenticación -->
+        <div id="authContainer" class="auth-container hidden">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <div class="logo">🧘‍♀️</div>
+                    <h1 class="app-title">SoftZen</h1>
+                    <p class="app-tagline">Yoga que transforma, cura y renueva</p>
+                </div>
+
+                <!-- Tabs de Login/Registro -->
+                <div class="auth-tabs">
+                    <button class="tab-btn active" data-tab="login">Iniciar Sesión</button>
+                    <button class="tab-btn" data-tab="register">Registrarse</button>
+                </div>
+
+                <!-- Formulario de Login -->
+                <form id="loginForm" class="auth-form active">
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input 
+                            type="email" 
+                            id="loginEmail" 
+                            class="form-input"
+                            placeholder="tu@email.com"
+                            required
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="loginPassword">Contraseña</label>
+                        <input 
+                            type="password" 
+                            id="loginPassword" 
+                            class="form-input"
+                            placeholder="Tu contraseña"
+                            required
+                        >
+                        <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary">Iniciar Sesión</button>
+                </form>
+
+                <!-- Formulario de Registro -->
+                <form id="registerForm" class="auth-form">
+                    <div class="form-group">
+                        <label for="registerName">Nombre Completo</label>
+                        <input 
+                            type="text" 
+                            id="registerName" 
+                            class="form-input"
+                            placeholder="Tu nombre completo"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerEmail">Email</label>
+                        <input 
+                            type="email" 
+                            id="registerEmail" 
+                            class="form-input"
+                            placeholder="tu@email.com"
+                            required
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="registerPassword">Contraseña</label>
+                        <input 
+                            type="password" 
+                            id="registerPassword" 
+                            class="form-input"
+                            placeholder="Mínimo 6 caracteres"
+                            minlength="6"
+                            required
+                        >
+                        <div class="password-toggle">
+                            <input type="checkbox" id="showPassword">
+                            <label for="showPassword">Mostrar contraseña</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="userType">Tipo de Usuario</label>
+                        <select id="userType" class="form-select" required>
+                            <option value="">Selecciona tu rol</option>
+                            <option value="instructor">Instructor</option>
+                            <option value="patient">Paciente</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary">Registrarse</button>
+                </form>
+
+                <!-- Credenciales Demo -->
+                <div class="demo-credentials">
+                    <h4>🔐 Credenciales de Demostración:</h4>
+                    <div class="credential-item">
+                        <span class="role">👨‍⚕️ Instructor:</span>
+                        <div class="credentials">
+                            <p><strong>Email:</strong> admin@softzen.com</p>
+                            <p><strong>Contraseña:</strong> SoftZen2024</p>
+                        </div>
+                    </div>
+                    <div class="credential-item">
+                        <span class="role">🧘‍♀️ Paciente:</span>
+                        <div class="credentials">
+                            <p><strong>Email:</strong> paciente@softzen.com</p>
+                            <p><strong>Contraseña:</strong> SoftZen2024</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Container -->
+        <div id="dashboardContainer" class="dashboard-container hidden">
+            <!-- Barra de Navegación -->
+            <nav class="navbar">
+                <div class="nav-brand">
+                    <span class="nav-logo">🧘‍♀️</span>
+                    <span class="nav-title">SoftZen</span>
+                </div>
+                
+                <div class="nav-menu">
+                    <button class="nav-item active" data-section="therapies">
+                        <span class="nav-icon">🧘</span>
+                        <span>Terapias</span>
+                    </button>
+                    <button class="nav-item" data-section="reports">
+                        <span class="nav-icon">📊</span>
+                        <span>Reportes</span>
+                    </button>
+                    <button class="nav-item instructor-only" data-section="users">
+                        <span class="nav-icon">👥</span>
+                        <span>Usuarios</span>
+                    </button>
+                    <button class="nav-item" data-section="profile">
+                        <span class="nav-icon">👤</span>
+                        <span>Perfil</span>
+                    </button>
+                </div>
+                
+                <div class="nav-user">
+                    <span class="user-name">Usuario</span>
+                    <button id="logoutBtn" class="btn-logout">
+                        <span>🚪</span> Salir
+                    </button>
+                </div>
+            </nav>
+
+            <!-- Contenido Principal -->
+            <main class="main-content">
+                <!-- Estadísticas del Dashboard -->
+                <div id="dashboardStats" class="dashboard-stats"></div>
+
+                <!-- Sección de Terapias -->
+                <section id="therapiesSection" class="dashboard-section">
+                    <div class="section-header">
+                        <h2>Terapias Disponibles</h2>
+                        <button class="btn-primary instructor-only" id="createTherapyBtn">
+                            + Nueva Terapia
+                        </button>
+                    </div>
+                    <div id="therapiesList" class="cards-grid"></div>
+                </section>
+
+                <!-- Sección de Reportes -->
+                <section id="reportsSection" class="dashboard-section hidden">
+                    <div class="section-header">
+                        <h2>Reportes de Progreso</h2>
+                        <button class="btn-secondary" id="generateReportBtn">
+                            📄 Generar Reporte
+                        </button>
+                    </div>
+                    <div id="reportsList" class="reports-list"></div>
+                </section>
+
+                <!-- Sección de Usuarios (Solo Instructores) -->
+                <section id="usersSection" class="dashboard-section instructor-only hidden">
+                    <div class="section-header">
+                        <h2>Gestión de Usuarios</h2>
+                        <button class="btn-primary" id="addUserBtn">
+                            + Agregar Usuario
+                        </button>
+                    </div>
+                    <div id="usersList" class="users-grid"></div>
+                </section>
+
+                <!-- Sección de Perfil -->
+                <section id="profileSection" class="dashboard-section hidden">
+                    <div class="section-header">
+                        <h2>Mi Perfil</h2>
+                    </div>
+                    <div id="profileInfo" class="profile-info"></div>
+                </section>
+            </main>
+        </div>
+
+        <!-- Estado de la Aplicación -->
+        <div class="app-status">
+            <span class="status-indicator online" title="Estado de conexión">🟢</span>
+            <span class="status-text">Online</span>
+            <span class="version-info">v2.1</span>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/firebase-config.js"></script>
+    <script type="module" src="js/auth.js"></script>
+    <script type="module" src="app.js"></script>
+</body>
+</html>

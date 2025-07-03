@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setup Demo - SoftZen</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1A202C;
+            color: white;
+        }
+        .container {
+            background: #2D3748;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #9F7AEA;
+            text-align: center;
+        }
+        .section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #4A5568;
+            border-radius: 8px;
+        }
+        button {
+            background: #6B46C1;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #553C9A;
+        }
+        button:disabled {
+            background: #718096;
+            cursor: not-allowed;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 14px;
+            max-height: 200px;
+            overflow-y: auto;
+            background: #1A202C;
+        }
+        .success {
+            color: #48BB78;
+        }
+        .error {
+            color: #F56565;
+        }
+        .warning {
+            color: #ED8936;
+        }
+        .info {
+            color: #63B3ED;
+        }
+        .credentials {
+            background: #E2E8F0;
+            color: #2D3748;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .credentials h3 {
+            margin-top: 0;
+            color: #6B46C1;
+        }
+        .credential-item {
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧘‍♀️ SoftZen - Configuración Demo</h1>
+        
+        <div class="section">
+            <h2>1. Estado de Firebase</h2>
+            <p>Primero, verifica que Firebase esté correctamente configurado:</p>
+            <button id="checkFirebase">Verificar Firebase</button>
+            <div id="firebaseStatus" class="status"></div>
+        </div>
+        
+        <div class="section">
+            <h2>2. Crear Usuarios Demo</h2>
+            <p>Crea los usuarios de demostración en Firebase Auth:</p>
+            <button id="createUsers">Crear Usuarios Demo</button>
+            <div id="usersStatus" class="status"></div>
+            
+            <div class="credentials">
+                <h3>Credenciales Demo:</h3>
+                <div class="credential-item">
+                    <strong>Instructor:</strong><br>
+                    Email: admin@softzen.com<br>
+                    Contraseña: SoftZen2024
+                </div>
+                <div class="credential-item">
+                    <strong>Paciente:</strong><br>
+                    Email: paciente@softzen.com<br>
+                    Contraseña: SoftZen2024
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>3. Crear Terapias Demo</h2>
+            <p>Agrega las terapias predefinidas a Firestore:</p>
+            <button id="createTherapies">Crear Terapias Demo</button>
+            <div id="therapiesStatus" class="status"></div>
+        </div>
+        
+        <div class="section">
+            <h2>4. Verificar Instalación</h2>
+            <p>Comprueba que todo esté funcionando correctamente:</p>
+            <button id="verifySetup">Verificar Setup Completo</button>
+            <div id="verifyStatus" class="status"></div>
+        </div>
+        
+        <div class="section">
+            <h2>5. Ir a la Aplicación</h2>
+            <p>Una vez completado el setup, puedes acceder a la aplicación:</p>
+            <button onclick="window.location.href='/'">Ir a SoftZen</button>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    
+    <script>
+        // Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyBJeqVMFusCntqBhA5RLlM5XSgsV_hOf38",
+            authDomain: "pagina-yoga.firebaseapp.com",
+            projectId: "pagina-yoga",
+            storageBucket: "pagina-yoga.firebasestorage.app",
+            messagingSenderId: "292008599562",
+            appId: "1:292008599562:web:6b9a8e795306e32c7dbff3"
+        };
+
+        // Inicializar Firebase
+        let firebaseInitialized = false;
+        
+        // Función para log en el UI
+        function log(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            const time = new Date().toLocaleTimeString();
+            element.innerHTML += `<div class="${type}">[${time}] ${message}</div>`;
+            element.scrollTop = element.scrollHeight;
+        }
+        
+        // Verificar Firebase
+        document.getElementById('checkFirebase').addEventListener('click', async () => {
+            const statusEl = 'firebaseStatus';
+            log(statusEl, 'Verificando Firebase...', 'info');
+            
+            try {
+                if (!firebaseInitialized) {
+                    firebase.initializeApp(firebaseConfig);
+                    firebaseInitialized = true;
+                }
+                
+                log(statusEl, '✅ Firebase App inicializada', 'success');
+                
+                // Verificar Auth
+                const auth = firebase.auth();
+                log(statusEl, '✅ Firebase Auth disponible', 'success');
+                
+                // Verificar Firestore
+                const db = firebase.firestore();
+                log(statusEl, '✅ Firebase Firestore disponible', 'success');
+                
+                log(statusEl, 'Firebase está correctamente configurado!', 'success');
+                
+            } catch (error) {
+                log(statusEl, `❌ Error: ${error.message}`, 'error');
+            }
+        });
+        
+        // Crear usuarios demo
+        document.getElementById('createUsers').addEventListener('click', async () => {
+            const statusEl = 'usersStatus';
+            const btn = document.getElementById('createUsers');
+            btn.disabled = true;
+            
+            log(statusEl, 'Iniciando creación de usuarios demo...', 'info');
+            
+            const demoUsers = [
+                {
+                    email: 'admin@softzen.com',
+                    password: 'SoftZen2024',
+                    userData: {
+                        name: 'Instructor Demo',
+                        userType: 'instructor',
+                        isActive: true,
+                        isDemo: true
+                    }
+                },
+                {
+                    email: 'paciente@softzen.com',
+                    password: 'SoftZen2024',
+                    userData: {
+                        name: 'Paciente Demo',
+                        userType: 'patient',
+                        isActive: true,
+                        isDemo: true
+                    }
+                }
+            ];
+            
+            for (const user of demoUsers) {
+                try {
+                    const userCredential = await firebase.auth().createUserWithEmailAndPassword(
+                        user.email, 
+                        user.password
+                    );
+                    
+                    await firebase.firestore().collection('users').doc(userCredential.user.uid).set({
+                        ...user.userData,
+                        email: user.email,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    
+                    log(statusEl, `✅ Usuario creado: ${user.email}`, 'success');
+                    
+                } catch (error) {
+                    if (error.code === 'auth/email-already-in-use') {
+                        log(statusEl, `⚠️ Usuario ya existe: ${user.email}`, 'warning');
+                    } else {
+                        log(statusEl, `❌ Error con ${user.email}: ${error.message}`, 'error');
+                    }
+                }
+            }
+            
+            await firebase.auth().signOut();
+            log(statusEl, 'Proceso completado', 'info');
+            btn.disabled = false;
+        });
+        
+        // Crear terapias demo
+        document.getElementById('createTherapies').addEventListener('click', async () => {
+            const statusEl = 'therapiesStatus';
+            const btn = document.getElementById('createTherapies');
+            btn.disabled = true;
+            
+            log(statusEl, 'Creando terapias demo...', 'info');
+            
+            const therapies = [
+                {
+                    name: 'Yoga Suave para Principiantes',
+                    description: 'Introducción suave al yoga terapéutico con posturas básicas',
+                    duration: 30,
+                    level: 'Principiante',
+                    category: 'Relajación',
+                    type: 'stress_relief'
+                },
+                {
+                    name: 'Respiración Consciente',
+                    description: 'Técnicas de respiración para reducir el estrés y la ansiedad',
+                    duration: 20,
+                    level: 'Todos',
+                    category: 'Respiración',
+                    type: 'anxiety'
+                },
+                {
+                    name: 'Yoga para Dolor de Espalda',
+                    description: 'Secuencia especializada para aliviar dolores de espalda',
+                    duration: 45,
+                    level: 'Intermedio',
+                    category: 'Terapéutico',
+                    type: 'back_pain'
+                },
+                {
+                    name: 'Meditación Guiada',
+                    description: 'Sesión de meditación para calmar la mente',
+                    duration: 25,
+                    level: 'Todos',
+                    category: 'Meditación',
+                    type: 'relaxation'
+                },
+                {
+                    name: 'Yoga Restaurativo',
+                    description: 'Posturas pasivas para una relajación profunda',
+                    duration: 60,
+                    level: 'Todos',
+                    category: 'Restaurativo',
+                    type: 'sleep'
+                }
+            ];
+            
+            for (const therapy of therapies) {
+                try {
+                    // Verificar si ya existe
+                    const existing = await firebase.firestore()
+                        .collection('therapies')
+                        .where('name', '==', therapy.name)
+                        .get();
+                    
+                    if (existing.empty) {
+                        await firebase.firestore().collection('therapies').add({
+                            ...therapy,
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            isDemo: true
+                        });
+                        log(statusEl, `✅ Terapia creada: ${therapy.name}`, 'success');
+                    } else {
+                        log(statusEl, `⚠️ Terapia ya existe: ${therapy.name}`, 'warning');
+                    }
+                } catch (error) {
+                    log(statusEl, `❌ Error con ${therapy.name}: ${error.message}`, 'error');
+                }
+            }
+            
+            log(statusEl, 'Proceso completado', 'info');
+            btn.disabled = false;
+        });
+        
+        // Verificar setup completo
+        document.getElementById('verifySetup').addEventListener('click', async () => {
+            const statusEl = 'verifyStatus';
+            const btn = document.getElementById('verifySetup');
+            btn.disabled = true;
+            
+            log(statusEl, 'Verificando instalación...', 'info');
+            
+            try {
+                // Verificar usuarios
+                const users = await firebase.firestore().collection('users').get();
+                log(statusEl, `✅ ${users.size} usuarios encontrados`, 'success');
+                
+                // Verificar terapias
+                const therapies = await firebase.firestore().collection('therapies').get();
+                log(statusEl, `✅ ${therapies.size} terapias encontradas`, 'success');
+                
+                // Verificar conexión al backend
+                try {
+                    const response = await fetch('http://localhost:3001/api/health');
+                    if (response.ok) {
+                        log(statusEl, '✅ Backend API funcionando', 'success');
+                    } else {
+                        log(statusEl, '⚠️ Backend API no responde', 'warning');
+                    }
+                } catch (error) {
+                    log(statusEl, '⚠️ Backend no disponible (normal si no está ejecutándose)', 'warning');
+                }
+                
+                log(statusEl, '🎉 Setup verificado correctamente!', 'success');
+                
+            } catch (error) {
+                log(statusEl, `❌ Error verificando: ${error.message}`, 'error');
+            }
+            
+            btn.disabled = false;
+        });
+        
+        // Auto-verificar Firebase al cargar
+        window.addEventListener('load', () => {
+            document.getElementById('checkFirebase').click();
+        });
+    </script>
+</body>
+</html>
