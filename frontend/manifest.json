@@ -1,22 +1,120 @@
 {
-  "name": "SoftZen - Yoga Terapéutico",
+  "name": "SoftZen - Yoga Terapéutico Optimizado",
   "short_name": "SoftZen",
-  "description": "Aplicación de yoga terapéutico optimizado",
+  "description": "Aplicación profesional de yoga terapéutico con seguimiento personalizado de progreso y gestión de pacientes",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#6B46C1",
   "theme_color": "#6B46C1",
   "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "es",
+  "dir": "ltr",
+  "categories": ["health", "fitness", "medical", "wellness"],
+  "screenshots": [
+    {
+      "src": "/img/screenshot-1.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "label": "Pantalla de inicio"
+    },
+    {
+      "src": "/img/screenshot-2.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "label": "Dashboard de instructor"
+    }
+  ],
   "icons": [
+    {
+      "src": "/img/icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/img/icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/img/icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/img/icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/img/icon-152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any"
+    },
     {
       "src": "/img/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/img/icon-384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "/img/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/img/icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/img/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
-  ]
+  ],
+  "shortcuts": [
+    {
+      "name": "Nueva Sesión",
+      "short_name": "Sesión",
+      "description": "Iniciar una nueva sesión de yoga",
+      "url": "/session/new",
+      "icons": [
+        {
+          "src": "/img/shortcut-session.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Mis Terapias",
+      "short_name": "Terapias",
+      "description": "Ver mis terapias asignadas",
+      "url": "/therapies",
+      "icons": [
+        {
+          "src": "/img/shortcut-therapies.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "prefer_related_applications": false,
+  "related_applications": []
 }

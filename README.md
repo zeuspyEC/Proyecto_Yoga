@@ -1,221 +1,278 @@
-# 🧘‍♀️ SoftZen - Aplicación de Yoga Terapéutico
+# 🧘‍♀️ SoftZen - Yoga Terapéutico Optimizado
 
-[![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)](https://firebase.google.com/)
-[![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
-[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/es/docs/Web/JavaScript)
+Sistema profesional de gestión de yoga terapéutico con seguimiento personalizado de progreso, gestión de pacientes y análisis de resultados.
 
-## 📋 Descripción
+![SoftZen Logo](https://img.shields.io/badge/SoftZen-v2.1-purple?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0xMiAydjIwIi8+PHBhdGggZD0iTTIgMTJoMjAiLz48L3N2Zz4=)
+![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
 
-SoftZen es una aplicación web progresiva (PWA) para yoga terapéutico que permite a instructores y pacientes gestionar sesiones de yoga personalizadas. La aplicación cuenta con autenticación segura, gestión de terapias, seguimiento de progreso y reportes detallados.
+## 📋 Tabla de Contenidos
+
+- [Características](#-características)
+- [Tecnologías](#-tecnologías)
+- [Requisitos Previos](#-requisitos-previos)
+- [Instalación](#-instalación)
+- [Configuración](#-configuración)
+- [Uso](#-uso)
+- [Estructura del Proyecto](#-estructura-del-proyecto)
+- [API](#-api)
+- [Contribuir](#-contribuir)
+- [Licencia](#-licencia)
 
 ## ✨ Características
 
 ### Para Instructores
-- 👥 Gestión completa de pacientes
-- 📝 Creación y edición de terapias personalizadas
-- 📊 Reportes detallados de progreso
-- 🎯 Seguimiento de sesiones
+- 📊 **Dashboard Completo**: KPIs en tiempo real, métricas de progreso y análisis detallado
+- 👥 **Gestión de Pacientes**: Registro completo, asignación de series y seguimiento individual
+- 🧘‍♀️ **Creación de Series**: Editor visual con drag & drop para organizar posturas
+- 📈 **Reportes Avanzados**: Exportación de datos, gráficos de progreso y análisis de dolor
+- 🔔 **Sistema de Alertas**: Notificaciones para pacientes inactivos o con aumento de dolor
 
 ### Para Pacientes
-- 🧘‍♀️ Acceso a terapias asignadas
-- 📈 Visualización de progreso personal
-- 📱 Interfaz intuitiva y responsiva
-- 🔔 Notificaciones de sesiones
+- 🎯 **Series Personalizadas**: Terapias adaptadas a cada condición específica
+- ⏱️ **Temporizador Inteligente**: Guía paso a paso con control de tiempo por postura
+- 📹 **Videos Instructivos**: Enlaces a videos de YouTube para cada postura
+- 📊 **Seguimiento de Progreso**: Visualización de mejoras y reducción de dolor
+- 💬 **Registro de Sesiones**: Comentarios y evaluación de dolor antes/después
 
-### Técnicas
-- 🔐 Autenticación segura con Firebase Auth
-- 💾 Base de datos en tiempo real con Firestore
-- 📱 Progressive Web App (PWA)
-- 🚀 Optimizado para rendimiento
-- 🌐 Funciona offline
+### Características Técnicas
+- 📱 **100% Responsive**: Diseño adaptable a todos los dispositivos
+- 🔥 **Firebase Integration**: Auth, Firestore y Storage completamente integrados
+- 🌐 **PWA**: Instalable como aplicación con funcionamiento offline
+- 🎨 **UI/UX Moderno**: Interfaz intuitiva con animaciones suaves
+- 🔔 **Notificaciones Visuales**: Sistema de notificaciones atractivo y sonoro
 
-## 🚀 Inicio Rápido
+## 🛠️ Tecnologías
 
-### Prerrequisitos
+- **Frontend**: HTML5, CSS3, JavaScript ES6+
+- **Backend**: Firebase (Auth, Firestore, Storage, Hosting)
+- **PWA**: Service Workers, Web App Manifest
+- **Herramientas**: Node.js (para desarrollo local)
 
-- Node.js 14+ instalado
-- Cuenta de Firebase (gratuita)
-- Git (opcional)
+## 📌 Requisitos Previos
 
-### Instalación
+1. **Cuenta de Firebase**: [Crear cuenta gratuita](https://firebase.google.com/)
+2. **Node.js**: v14+ (opcional, para desarrollo local)
+3. **Navegador moderno**: Chrome, Firefox, Safari o Edge actualizado
 
-1. **Clonar o descargar el proyecto**
+## 🚀 Instalación
+
+### Opción 1: Instalación Rápida con Scripts
+
+1. **Clonar el repositorio**
    ```bash
-   git clone https://github.com/tu-usuario/Proyecto-SoftZen.git
-   cd Proyecto-SoftZen
+   git clone https://github.com/tu-usuario/softzen.git
+   cd softzen
    ```
 
-2. **Instalar dependencias**
+2. **Ejecutar instalación automática**
    ```bash
+   # Windows
    1-INSTALAR.bat
+   
+   # Linux/Mac
+   chmod +x install.sh && ./install.sh
    ```
-   O manualmente:
+
+3. **Configurar Firebase**
+   - Crear proyecto en [Firebase Console](https://console.firebase.google.com/)
+   - Habilitar Authentication (Email/Password)
+   - Habilitar Firestore Database
+   - Habilitar Storage (opcional)
+   - Copiar configuración a `frontend/js/firebase-config.js`
+
+4. **Cargar datos demo**
+   - Abrir navegador en `http://localhost:3000/setup-demo.html`
+   - Seguir el asistente de configuración
+
+### Opción 2: Instalación Manual
+
+1. **Clonar y navegar al proyecto**
    ```bash
-   cd backend
-   npm install
+   git clone https://github.com/tu-usuario/softzen.git
+   cd softzen
    ```
 
-3. **Configurar usuarios demo**
-   - Abrir `http://localhost:3001/setup-demo.html`
-   - Seguir los pasos en pantalla
-
-4. **Ejecutar localmente**
-   ```bash
-   2-EJECUTAR-LOCAL.bat
-   ```
-   - La aplicación estará disponible en: `http://localhost:3001`
-
-### Credenciales Demo
-
-| Tipo | Email | Contraseña |
-|------|-------|------------|
-| **Instructor** | admin@softzen.com | SoftZen2024 |
-| **Paciente** | paciente@softzen.com | SoftZen2024 |
-
-## 📁 Estructura del Proyecto
-
-```
-Proyecto-SoftZen/
-├── backend/
-│   ├── server.js          # Servidor Express
-│   ├── db/
-│   │   └── therapy.db     # Base de datos SQLite
-│   └── package.json
-│
-├── frontend/
-│   ├── index.html         # Página principal
-│   ├── setup-demo.html    # Configuración inicial
-│   ├── test.html          # Página de pruebas
-│   ├── styles.css         # Estilos globales
-│   ├── app.js            # Lógica principal
-│   ├── manifest.json     # PWA manifest
-│   ├── sw.js            # Service Worker
-│   └── js/
-│       ├── firebase-config.js    # Configuración Firebase
-│       ├── firebase-service.js   # Servicios Firebase
-│       ├── auth.js              # Módulo de autenticación
-│       └── dashboard.js         # Módulo del dashboard
-│
-├── firebase.json         # Configuración Firebase Hosting
-├── firestore.rules      # Reglas de seguridad Firestore
-├── storage.rules        # Reglas de seguridad Storage
-└── *.bat               # Scripts de Windows
-
-```
-
-## 🚀 Despliegue en Producción
-
-### Opción 1: Firebase Hosting (Recomendado)
-
-1. **Instalar Firebase CLI**
+2. **Instalar Firebase CLI**
    ```bash
    npm install -g firebase-tools
    ```
 
-2. **Iniciar sesión en Firebase**
+3. **Configurar Firebase**
    ```bash
    firebase login
+   firebase init
+   # Seleccionar: Firestore, Hosting, Storage
+   # Directorio público: frontend
+   # SPA: Yes
    ```
 
-3. **Desplegar**
+4. **Actualizar configuración**
+   - Editar `frontend/js/firebase-config.js` con tus credenciales
+
+5. **Desplegar reglas de seguridad**
    ```bash
-   3-DESPLEGAR-FIREBASE.bat
-   ```
-   O manualmente:
-   ```bash
-   firebase deploy
+   firebase deploy --only firestore:rules
+   firebase deploy --only storage:rules
    ```
 
-Tu aplicación estará disponible en:
-- `https://pagina-yoga.web.app`
-- `https://pagina-yoga.firebaseapp.com`
+## ⚙️ Configuración
 
-### Opción 2: Hosting Tradicional
+### Firebase Configuration
 
-1. Subir el contenido de `/frontend` a tu servidor
-2. Configurar HTTPS (requerido para PWA)
-3. Actualizar las URLs en `firebase-config.js`
-
-## 🔧 Configuración
-
-### Variables de Entorno (Backend)
-
-Crear archivo `.env` en `/backend`:
-
-```env
-NODE_ENV=production
-PORT=3001
-JWT_SECRET=tu_secret_key_segura
+```javascript
+// frontend/js/firebase-config.js
+const firebaseConfig = {
+  apiKey: "tu-api-key",
+  authDomain: "tu-proyecto.firebaseapp.com",
+  projectId: "tu-proyecto",
+  storageBucket: "tu-proyecto.appspot.com",
+  messagingSenderId: "123456789",
+  appId: "tu-app-id"
+};
 ```
 
-### Firebase
+### Credenciales Demo
 
-1. **Crear proyecto en Firebase Console**
-   - Ir a [Firebase Console](https://console.firebase.google.com)
-   - Crear nuevo proyecto
-   - Habilitar Authentication, Firestore y Storage
+Después de ejecutar el setup, puedes acceder con:
 
-2. **Actualizar configuración**
-   - Copiar configuración de Firebase
-   - Actualizar `frontend/js/firebase-config.js`
+**Instructor:**
+- Email: `admin@softzen.com`
+- Password: `SoftZen2024`
 
-3. **Configurar reglas de seguridad**
-   - Aplicar reglas desde `firestore.rules`
-   - Aplicar reglas desde `storage.rules`
+**Paciente:**
+- Email: `paciente@softzen.com`
+- Password: `SoftZen2024`
 
-## 🧪 Testing
+## 💻 Uso
 
-### Test Manual
-1. Abrir `http://localhost:3001/test.html`
-2. Verificar todos los servicios
-3. Probar login con credenciales demo
+### Desarrollo Local
 
-### Verificar PWA
-1. Abrir Chrome DevTools
-2. Ir a Application > Service Workers
-3. Verificar que esté registrado y activo
+```bash
+# Windows
+2-EJECUTAR-LOCAL.bat
 
-## 📱 Características PWA
+# Manual
+cd frontend
+python -m http.server 3000
+# o
+npx http-server -p 3000
+```
 
-- ✅ Instalable en dispositivos
-- ✅ Funciona offline
-- ✅ Sincronización en background
-- ✅ Notificaciones push (próximamente)
-- ✅ Actualización automática
+Abrir navegador en `http://localhost:3000`
 
-## 🛠️ Solución de Problemas
+### Despliegue a Producción
 
-### "No puedo iniciar sesión"
-- Verificar credenciales exactas (sin espacios)
-- Ejecutar setup-demo.html para crear usuarios
-- Revisar consola del navegador
+```bash
+# Windows
+3-DESPLEGAR-FIREBASE.bat
 
-### "Firebase no funciona"
-- Verificar conexión a internet
-- Revisar configuración en firebase-config.js
-- Verificar que Firebase esté inicializado
+# Manual
+firebase deploy
+```
 
-### "El backend no responde"
-- Verificar que esté ejecutándose en puerto 3001
-- Revisar logs en la terminal
-- Verificar firewall/antivirus
+Tu app estará disponible en: `https://tu-proyecto.web.app`
 
-## 🔒 Seguridad
+## 📁 Estructura del Proyecto
 
-- Autenticación con Firebase Auth
-- Reglas de Firestore configuradas
-- HTTPS requerido en producción
-- Tokens JWT para API
-- Validación de datos en cliente y servidor
+```
+Proyecto_Yoga/
+├── frontend/                # Aplicación web
+│   ├── index.html          # Página principal
+│   ├── setup-demo.html     # Configuración inicial
+│   ├── styles.css          # Estilos globales
+│   ├── app.js              # Lógica principal
+│   ├── manifest.json       # PWA manifest
+│   ├── sw.js               # Service Worker
+│   ├── js/                 # Módulos JavaScript
+│   │   ├── firebase-config.js
+│   │   ├── firebase-service.js
+│   │   ├── auth.js
+│   │   ├── dashboard.js
+│   │   ├── therapyData.js
+│   │   ├── notifications.js
+│   │   └── setup-demo.js
+│   └── img/                # Imágenes y iconos
+├── backend/                # Backend (opcional)
+├── firebase.json           # Configuración Firebase
+├── firestore.rules         # Reglas de seguridad
+├── firestore.indexes.json  # Índices de base de datos
+└── storage.rules           # Reglas de Storage
+```
 
-## 📈 Mejoras Futuras
+## 🔌 API
 
-- [ ] Chat en tiempo real instructor-paciente
-- [ ] Videollamadas integradas
-- [ ] Exportación de reportes PDF
-- [ ] App móvil nativa
-- [ ] Integración con wearables
-- [ ] Análisis con IA
+### Servicios de Firebase
+
+#### Autenticación
+```javascript
+// Registro
+await firebaseService.authService.register(email, password, userData);
+
+// Login
+await firebaseService.authService.login(email, password);
+
+// Logout
+await firebaseService.authService.logout();
+```
+
+#### Base de Datos
+```javascript
+// Usuarios
+await firebaseService.dbService.users.get(userId);
+await firebaseService.dbService.users.update(userId, data);
+await firebaseService.dbService.users.getAll();
+
+// Terapias
+await firebaseService.dbService.therapies.create(therapyData);
+await firebaseService.dbService.therapies.getAll();
+await firebaseService.dbService.therapies.update(therapyId, data);
+
+// Sesiones
+await firebaseService.dbService.sessions.create(sessionData);
+await firebaseService.dbService.sessions.getByUser(userId);
+```
+
+### Sistema de Notificaciones
+
+```javascript
+// Notificación simple
+showSuccess('Operación exitosa');
+showError('Error en la operación');
+
+// Notificación compleja
+notificationSystem.show({
+    type: 'achievement',
+    title: 'Logro Desbloqueado',
+    message: 'Has completado 10 sesiones',
+    duration: 6000,
+    actions: [{
+        text: 'Ver Progreso',
+        onClick: 'viewProgress()'
+    }]
+});
+```
+
+## 🚧 Desarrollo
+
+### Agregar Nueva Funcionalidad
+
+1. Crear módulo en `frontend/js/`
+2. Importar en `index.html`
+3. Documentar en este README
+
+### Testing
+
+```bash
+# Ejecutar tests (próximamente)
+npm test
+```
+
+### Debugging
+
+- Abrir DevTools (F12)
+- Revisar consola para logs detallados
+- Verificar Network para peticiones Firebase
 
 ## 🤝 Contribuir
 
@@ -227,18 +284,26 @@ JWT_SECRET=tu_secret_key_segura
 
 ## 📄 Licencia
 
-Este proyecto está bajo la Licencia MIT. Ver `LICENSE` para más información.
+Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para detalles.
 
-## 👥 Autores
+## 👥 Equipo
 
-- **Tu Nombre** - *Desarrollo inicial* - [GitHub](https://github.com/tu-usuario)
+- **Desarrollador Principal**: [Tu Nombre]
+- **Diseño UX/UI**: [Diseñador]
+- **Consultor Yoga**: [Instructor]
+
+## 📞 Soporte
+
+- 📧 Email: soporte@softzen.com
+- 📱 WhatsApp: +XX XXXX XXXX
+- 🌐 Web: https://softzen.com
 
 ## 🙏 Agradecimientos
 
+- Comunidad de yoga terapéutico
 - Firebase por la infraestructura
-- La comunidad de yoga terapéutico
 - Todos los beta testers
 
 ---
 
-**SoftZen v2.1** - Transformando vidas a través del yoga terapéutico 🧘‍♀️✨
+Hecho con ❤️ y 🧘‍♀️ por el equipo de SoftZen

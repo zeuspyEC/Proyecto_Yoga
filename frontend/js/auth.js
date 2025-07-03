@@ -43,6 +43,22 @@ function initAuth() {
 
 // Configurar formularios de autenticación
 function setupAuthForms() {
+    // Configurar cambio de tipo de usuario para mostrar/ocultar campo de edad
+    const userTypeSelect = document.getElementById('userType');
+    const ageGroup = document.getElementById('ageGroup');
+    
+    if (userTypeSelect && ageGroup) {
+        userTypeSelect.addEventListener('change', (e) => {
+            if (e.target.value === 'patient') {
+                ageGroup.classList.remove('hidden');
+                document.getElementById('registerAge').required = true;
+            } else {
+                ageGroup.classList.add('hidden');
+                document.getElementById('registerAge').required = false;
+            }
+        });
+    }
+    
     // Formulario de login
     if (authForms.login) {
         authForms.login.addEventListener('submit', async (e) => {
@@ -87,6 +103,7 @@ function setupAuthForms() {
             const password = document.getElementById('registerPassword').value;
             const userType = document.getElementById('userType').value;
             const name = document.getElementById('registerName')?.value || '';
+            const age = document.getElementById('registerAge')?.value || null;
             
             // Validaciones
             if (!window.firebaseService.utils.validateEmail(email)) {
@@ -111,8 +128,14 @@ function setupAuthForms() {
             const userData = {
                 name,
                 userType,
-                isActive: true
+                isActive: true,
+                createdAt: new Date().toISOString()
             };
+            
+            // Si es paciente, agregar edad
+            if (userType === 'patient' && age) {
+                userData.age = parseInt(age);
+            }
             
             // Intentar registro
             const result = await window.firebaseService.authService.register(email, password, userData);
