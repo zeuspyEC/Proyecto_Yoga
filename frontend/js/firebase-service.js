@@ -129,17 +129,6 @@ const dbService = {
                 console.error('Error obteniendo usuarios:', error);
                 return { success: false, error: error.message };
             }
-        },
-
-        async delete(userId) {
-            await waitForFirebase();
-            try {
-                await firebase.firestore().collection('users').doc(userId).delete();
-                return { success: true };
-            } catch (error) {
-                console.error('Error eliminando usuario:', error);
-                return { success: false, error: error.message };
-            }
         }
     },
 
@@ -250,20 +239,6 @@ const dbService = {
                 console.error('Error eliminando terapia:', error);
                 return { success: false, error: error.message };
             }
-        },
-
-        async get(therapyId) {
-            await waitForFirebase();
-            try {
-                const doc = await firebase.firestore().collection('therapies').doc(therapyId).get();
-                if (doc.exists) {
-                    return { success: true, data: doc.data() };
-                }
-                return { success: false, error: 'Terapia no encontrada' };
-            } catch (error) {
-                console.error('Error obteniendo terapia:', error);
-                return { success: false, error: error.message };
-            }
         }
     },
 
@@ -288,8 +263,8 @@ const dbService = {
             try {
                 const snapshot = await firebase.firestore()
                     .collection('sessions')
-                    .where('patientId', '==', userId)
-                    .orderBy('completedAt', 'desc')
+                    .where('userId', '==', userId)
+                    .orderBy('createdAt', 'desc')
                     .get();
                 const sessions = [];
                 snapshot.forEach(doc => {
@@ -303,40 +278,7 @@ const dbService = {
                     try {
                         const snapshot = await firebase.firestore()
                             .collection('sessions')
-                            .where('patientId', '==', userId)
-                            .get();
-                        const sessions = [];
-                        snapshot.forEach(doc => {
-                            sessions.push({ id: doc.id, ...doc.data() });
-                        });
-                        return { success: true, data: sessions };
-                    } catch (err) {
-                        return { success: false, error: err.message };
-                    }
-                }
-                return { success: false, error: error.message };
-            }
-        },
-
-        async getAll() {
-            await waitForFirebase();
-            try {
-                const snapshot = await firebase.firestore()
-                    .collection('sessions')
-                    .orderBy('completedAt', 'desc')
-                    .get();
-                const sessions = [];
-                snapshot.forEach(doc => {
-                    sessions.push({ id: doc.id, ...doc.data() });
-                });
-                return { success: true, data: sessions };
-            } catch (error) {
-                console.error('Error obteniendo todas las sesiones:', error);
-                // Si el error es por índice faltante, intentar sin ordenar
-                if (error.code === 'failed-precondition') {
-                    try {
-                        const snapshot = await firebase.firestore()
-                            .collection('sessions')
+                            .where('userId', '==', userId)
                             .get();
                         const sessions = [];
                         snapshot.forEach(doc => {

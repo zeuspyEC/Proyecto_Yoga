@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang=\"es\">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#6B46C1">
+    <meta charset=\"UTF-8\">
+    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+    <meta name=\"theme-color\" content=\"#6B46C1\">
     <title>Setup Demo - SoftZen</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel=\"stylesheet\" href=\"styles.css\">
     <style>
         /* Estilos específicos para setup */
         .setup-container {
@@ -168,69 +168,69 @@
     </style>
 </head>
 <body>
-    <div class="setup-container">
-        <div class="setup-card">
-            <div class="setup-header">
-                <div class="logo">🧘‍♀️</div>
+    <div class=\"setup-container\">
+        <div class=\"setup-card\">
+            <div class=\"setup-header\">
+                <div class=\"logo\">🧘‍♀️</div>
                 <h1>SoftZen - Configuración Demo</h1>
                 <p>Configura los datos de demostración para comenzar a usar SoftZen</p>
             </div>
             
-            <div class="progress-indicator">
-                <div class="progress-step" id="step1">
-                    <span class="step-circle">1</span>
-                    <span class="step-label">Firebase</span>
+            <div class=\"progress-indicator\">
+                <div class=\"progress-step\" id=\"step1\">
+                    <span class=\"step-circle\">1</span>
+                    <span class=\"step-label\">Firebase</span>
                 </div>
-                <div class="progress-step" id="step2">
-                    <span class="step-circle">2</span>
-                    <span class="step-label">Usuarios</span>
+                <div class=\"progress-step\" id=\"step2\">
+                    <span class=\"step-circle\">2</span>
+                    <span class=\"step-label\">Usuarios</span>
                 </div>
-                <div class="progress-step" id="step3">
-                    <span class="step-circle">3</span>
-                    <span class="step-label">Terapias</span>
+                <div class=\"progress-step\" id=\"step3\">
+                    <span class=\"step-circle\">3</span>
+                    <span class=\"step-label\">Terapias</span>
                 </div>
-                <div class="progress-step" id="step4">
-                    <span class="step-circle">4</span>
-                    <span class="step-label">Completado</span>
+                <div class=\"progress-step\" id=\"step4\">
+                    <span class=\"step-circle\">4</span>
+                    <span class=\"step-label\">Completado</span>
                 </div>
             </div>
             
-            <div class="setup-section">
+            <div class=\"setup-section\">
                 <h2>🔥 Estado de Firebase</h2>
                 <p>Verificando la conexión con Firebase...</p>
-                <button class="btn-primary" id="checkFirebase">Verificar Firebase</button>
-                <div id="firebaseStatus" class="setup-status"></div>
+                <button class=\"btn-primary\" id=\"checkFirebase\">Verificar Firebase</button>
+                <div id=\"firebaseStatus\" class=\"setup-status\"></div>
             </div>
             
-            <div class="setup-section">
+            <div class=\"setup-section\">
                 <h2>👥 Crear Usuarios Demo</h2>
                 <p>Se crearán usuarios de demostración para probar la aplicación:</p>
                 
-                <div class="demo-credentials">
+                <div class=\"demo-credentials\">
                     <h3>Credenciales que se crearán:</h3>
-                    <div class="credential-grid">
-                        <div class="credential-card">
+                    <div class=\"credential-grid\">
+                        <div class=\"credential-card\">
                             <h4>👨‍⚕️ Instructor</h4>
                             <p><strong>Nombre:</strong> Dr. Carlos Mendoza</p>
                             <p><strong>Email:</strong> admin@softzen.com</p>
                             <p><strong>Contraseña:</strong> SoftZen2024</p>
                             <p><strong>Especialidad:</strong> Yoga Terapéutico</p>
                         </div>
-                        <div class="credential-card">
+                        <div class=\"credential-card\">
                             <h4>🧘‍♀️ Paciente 1</h4>
                             <p><strong>Nombre:</strong> María García</p>
                             <p><strong>Email:</strong> paciente@softzen.com</p>
                             <p><strong>Contraseña:</strong> SoftZen2024</p>
                             <p><strong>Condición:</strong> Dolor de espalda</p>
                         </div>
-                        <div class="credential-card">
+                        <div class=\"credential-card\">
                             <h4>🧘‍♂️ Paciente 2</h4>
                             <p><strong>Nombre:</strong> Juan Pérez</p>
                             <p><strong>Email:</strong> paciente2@softzen.com</p>
                             <p><strong>Contraseña:</strong> SoftZen2024</p>
                             <p><strong>Condición:</strong> Ansiedad</p>
                         </div>
-                        <div class="credential-card">
+                        <div class=\"credential-card\">
                             <h4>🧘 Paciente 3</h4>
                             <p><strong>Nombre:</strong> Ana Rodríguez</p>
                             <p><strong>Email:</strong> paciente3@softzen.com</p>
@@ -240,25 +240,25 @@
                     </div>
                 </div>
                 
-                <div class="setup-actions">
-                    <button class="btn-primary" id="setupAllDemo" disabled>
+                <div class=\"setup-actions\">
+                    <button class=\"btn-primary\" id=\"setupAllDemo\" disabled>
                         🚀 Configurar Todo Automáticamente
                     </button>
-                    <button class="btn-secondary" id="setupManual" disabled>
+                    <button class=\"btn-secondary\" id=\"setupManual\" disabled>
                         ⚙️ Configuración Manual
                     </button>
                 </div>
-                <div id="setupStatus" class="setup-status"></div>
+                <div id=\"setupStatus\" class=\"setup-status\"></div>
             </div>
             
-            <div class="setup-section">
+            <div class=\"setup-section\">
                 <h2>✅ Verificación Final</h2>
                 <p>Comprueba que todo esté funcionando correctamente:</p>
-                <button class="btn-primary" id="verifySetup" disabled>Verificar Instalación</button>
-                <div id="verifyStatus" class="setup-status"></div>
+                <button class=\"btn-primary\" id=\"verifySetup\" disabled>Verificar Instalación</button>
+                <div id=\"verifyStatus\" class=\"setup-status\"></div>
                 
-                <div class="setup-actions" style="margin-top: 2rem;">
-                    <button class="btn-primary btn-large" onclick="window.location.href='/'" disabled id="goToApp">
+                <div class=\"setup-actions\" style=\"margin-top: 2rem;\">
+                    <button class=\"btn-primary btn-large\" onclick=\"window.location.href='/'\" disabled id=\"goToApp\">
                         🧘‍♀️ Ir a SoftZen
                     </button>
                 </div>
@@ -267,17 +267,17 @@
     </div>
 
     <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+    <script src=\"https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js\"></script>
+    <script src=\"https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js\"></script>
+    <script src=\"https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js\"></script>
+    <script src=\"https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js\"></script>
     
     <!-- Scripts de la aplicación -->
-    <script src="js/firebase-config.js"></script>
-    <script src="js/firebase-service.js"></script>
-    <script src="js/therapyData.js"></script>
-    <script src="js/notifications.js"></script>
-    <script src="js/setup-demo.js"></script>
+    <script src=\"js/firebase-config.js\"></script>
+    <script src=\"js/firebase-service.js\"></script>
+    <script src=\"js/therapyData.js\"></script>
+    <script src=\"js/notifications.js\"></script>
+    <script src=\"js/setup-demo.js\"></script>
     
     <script>
         // Estado del setup
@@ -301,7 +301,7 @@
             const element = document.getElementById(elementId);
             const time = new Date().toLocaleTimeString();
             const className = `status-${type}`;
-            element.innerHTML += `<div class="status-message ${className}">[${time}] ${message}</div>`;
+            element.innerHTML += `<div class=\"status-message ${className}\">[${time}] ${message}</div>`;
             element.scrollTop = element.scrollHeight;
         }
         

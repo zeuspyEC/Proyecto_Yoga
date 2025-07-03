@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Generador de Íconos SoftZen</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #8B7CF6, #6366F1);
+            color: white;
+        }
+        .canvas-container {
+            margin: 20px;
+            display: inline-block;
+        }
+        canvas {
+            border: 2px solid white;
+            border-radius: 10px;
+            margin: 10px;
+        }
+        .download-btn {
+            background: white;
+            color: #6366F1;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .download-btn:hover {
+            background: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧘‍♀️ Generador de Íconos SoftZen</h1>
+    <p>Haz clic en los botones para descargar los íconos generados</p>
+    
+    <div class="canvas-container">
+        <h3>Ícono 192x192</h3>
+        <canvas id="icon192" width="192" height="192"></canvas><br>
+        <button class="download-btn" onclick="downloadIcon('icon192', 'icon-192.png')">
+            📥 Descargar 192x192
+        </button>
+    </div>
+    
+    <div class="canvas-container">
+        <h3>Ícono 512x512</h3>
+        <canvas id="icon512" width="512" height="512"></canvas><br>
+        <button class="download-btn" onclick="downloadIcon('icon512', 'icon-512.png')">
+            📥 Descargar 512x512
+        </button>
+    </div>
+
+    <script>
+        function createIcon(canvasId, size) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            
+            // Limpiar canvas
+            ctx.clearRect(0, 0, size, size);
+            
+            // Fondo con gradiente
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#8B7CF6');
+            gradient.addColorStop(1, '#6366F1');
+            
+            // Dibujar fondo
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+            
+            // Círculo blanco en el centro
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.arc(size/2, size/2, size * 0.3, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Texto SZ en el centro
+            ctx.fillStyle = '#6366F1';
+            ctx.font = `bold ${size * 0.25}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('SZ', size/2, size/2);
+            
+            // Texto SoftZen abajo
+            ctx.fillStyle = 'white';
+            ctx.font = `bold ${size * 0.075}px Arial`;
+            ctx.fillText('SoftZen', size/2, size * 0.88);
+            
+            return canvas;
+        }
+        
+        function downloadIcon(canvasId, filename) {
+            const canvas = document.getElementById(canvasId);
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+        
+        // Auto-generar íconos al cargar
+        window.onload = function() {
+            createIcon('icon192', 192);
+            createIcon('icon512', 512);
+            console.log('✅ Íconos generados. Usa los botones para descargar.');
+        };
+        
+        // Auto-descargar después de 3 segundos (opcional)
+        setTimeout(() => {
+            console.log('🔄 Descargando íconos automáticamente...');
+            downloadIcon('icon192', 'icon-192.png');
+            setTimeout(() => {
+                downloadIcon('icon512', 'icon-512.png');
+            }, 1000);
+        }, 3000);
+    </script>
+    
+    <div style="margin-top: 40px; font-size: 14px; opacity: 0.8;">
+        <p>Los íconos se descargarán automáticamente en 3 segundos</p>
+        <p>O usa los botones de descarga manual</p>
+        <p>Guarda los archivos descargados en: <code>frontend/img/</code></p>
+    </div>
+</body>
+</html>

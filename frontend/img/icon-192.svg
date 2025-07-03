@@ -1,0 +1,37 @@
+<svg width="192" height="192" viewBox="0 0 192 192" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fondo -->
+  <rect width="192" height="192" rx="24" fill="url(#gradient)"/>
+  
+  <!-- Persona en posición de yoga -->
+  <g transform="translate(96, 96)">
+    <!-- Cuerpo -->
+    <circle cx="0" cy="-30" r="12" fill="#FFE4B5"/>
+    <ellipse cx="0" cy="-10" rx="8" ry="20" fill="#E6E6FA"/>
+    
+    <!-- Brazos -->
+    <ellipse cx="-15" cy="-5" rx="4" ry="12" fill="#FFE4B5" transform="rotate(-30)"/>
+    <ellipse cx="15" cy="-5" rx="4" ry="12" fill="#FFE4B5" transform="rotate(30)"/>
+    
+    <!-- Piernas -->
+    <ellipse cx="-8" cy="15" rx="4" ry="15" fill="#FFE4B5" transform="rotate(-20)"/>
+    <ellipse cx="8" cy="15" rx="4" ry="15" fill="#FFE4B5" transform="rotate(20)"/>
+    
+    <!-- Lotus flower debajo -->
+    <g transform="translate(0, 40)">
+      <ellipse cx="0" cy="0" rx="20" ry="6" fill="#DDA0DD"/>
+      <ellipse cx="0" cy="-3" rx="15" ry="4" fill="#E6E6FA"/>
+      <ellipse cx="0" cy="-6" rx="10" ry="3" fill="#F0E68C"/>
+    </g>
+  </g>
+  
+  <!-- Texto SoftZen -->
+  <text x="96" y="170" font-family="Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle" fill="white">SoftZen</text>
+  
+  <!-- Definir gradiente -->
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8B7CF6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6366F1;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+</svg>

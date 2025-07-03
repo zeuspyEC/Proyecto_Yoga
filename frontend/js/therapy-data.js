@@ -1,14 +1,16 @@
 // ===================================================================
-// THERAPY DATA - DATOS PREDEFINIDOS DE TERAPIAS DE YOGA
+// DATOS PREDEFINIDOS DE TERAPIAS - SOFTZEN V2.1
+// Base de datos completa de posturas y terapias de yoga
 // ===================================================================
 
+// Datos de terapias predefinidas con videos de YouTube
 const THERAPY_DATA = {
   anxiety: {
     id: 'anxiety',
-    name: 'Yoga para Ansiedad',
-    description: 'Serie terapéutica diseñada para calmar el sistema nervioso y reducir la ansiedad',
-    icon: '🧘‍♀️',
+    name: 'Ansiedad y Estrés',
+    description: 'Posturas diseñadas para calmar el sistema nervioso y reducir la ansiedad',
     color: '#667eea',
+    icon: '🧠',
     postures: [
       {
         id: 1,
@@ -19,7 +21,8 @@ const THERAPY_DATA = {
         modifications: 'Coloca una manta o cojín bajo la frente o entre los glúteos y los talones para mayor confort.',
         videoUrl: 'https://www.youtube.com/watch?v=wzQqaCiYCqs',
         image: 'https://resizer.glanacion.com/resizer/v2/contraindicaciones-la-instructora-asegura-que-no-K5MAD4UHDNAJJBYROTJSKDXGBY.jpg?auth=cd912d33fbfa6f1cc2350bd2104bcfc72d6c7efbc0eed3e7e33f6682ca8f2220&width=420&height=280&quality=70&smart=true',
-        defaultDuration: 5
+        defaultDuration: 5,
+        difficulty: 'principiante'
       },
       {
         id: 2,
@@ -30,7 +33,8 @@ const THERAPY_DATA = {
         modifications: 'Apoya las manos sobre bloques si sientes presión en las muñecas.',
         videoUrl: 'https://www.youtube.com/watch?v=yMjXE5Nk6vs',
         image: 'https://cdn.xuanlanyoga.com/wp-content/uploads/2022/04/gato-vaca-yoga.jpg',
-        defaultDuration: 5
+        defaultDuration: 3,
+        difficulty: 'principiante'
       },
       {
         id: 3,
@@ -41,7 +45,8 @@ const THERAPY_DATA = {
         modifications: 'Dobla ligeramente las rodillas o apoya las manos en el borde de una silla para aliviar la carga en hombros y isquios.',
         videoUrl: 'https://www.youtube.com/watch?v=OPe26Wd-PfM',
         image: 'https://guiafitness.com/wp-content/uploads/postura-del-perro-boca-abajo.jpg',
-        defaultDuration: 3
+        defaultDuration: 4,
+        difficulty: 'intermedio'
       },
       {
         id: 4,
@@ -52,7 +57,8 @@ const THERAPY_DATA = {
         modifications: 'Apoya la espalda contra la pared o deja el pie a la pantorrilla en lugar del muslo si eres principiante.',
         videoUrl: 'https://www.youtube.com/watch?v=i6gWt0n7Hv8',
         image: 'https://www.hola.com/horizon/original_aspect_ratio/581a0419f0a5-arbol-facil-z.jpg',
-        defaultDuration: 3
+        defaultDuration: 3,
+        difficulty: 'intermedio'
       },
       {
         id: 5,
@@ -63,7 +69,8 @@ const THERAPY_DATA = {
         modifications: 'Coloca una manta o cojín bajo las caderas para mayor elevación y confort.',
         videoUrl: 'https://www.youtube.com/shorts/2Z2jxqSJ0IA',
         image: 'https://img.huffingtonpost.es/files/image_1200_720/uploads/2024/08/29/una-mujer-con-las-piernas-en-la-pared.jpeg',
-        defaultDuration: 10
+        defaultDuration: 8,
+        difficulty: 'principiante'
       },
       {
         id: 6,
@@ -74,17 +81,18 @@ const THERAPY_DATA = {
         modifications: 'Coloca cojines bajo las rodillas o bajo los glúteos para mayor comodidad.',
         videoUrl: 'https://www.youtube.com/watch?v=X2POKG8Fp2M',
         image: 'https://www.relajemos.com/wp-content/uploads/2017/01/asana-baddha-konasana.jpg',
-        defaultDuration: 5
+        defaultDuration: 6,
+        difficulty: 'principiante'
       }
     ]
   },
 
   arthritis: {
     id: 'arthritis',
-    name: 'Yoga para Artritis',
-    description: 'Serie terapéutica diseñada para mejorar la movilidad articular y reducir el dolor',
+    name: 'Artritis y Rigidez Articular',
+    description: 'Posturas suaves para mejorar la movilidad y reducir la rigidez articular',
+    color: '#f093fb',
     icon: '🦴',
-    color: '#f56565',
     postures: [
       {
         id: 7,
@@ -95,7 +103,8 @@ const THERAPY_DATA = {
         modifications: 'Levanta solo el pecho y mantén la pelvis apoyada en el suelo para reducir la presión lumbar.',
         videoUrl: 'https://www.youtube.com/watch?v=niehLCrs8b8',
         image: 'https://www.vikika.es/blog/wp-content/uploads/2021/07/postura-cobra.jpg',
-        defaultDuration: 3
+        defaultDuration: 4,
+        difficulty: 'principiante'
       },
       {
         id: 8,
@@ -106,7 +115,8 @@ const THERAPY_DATA = {
         modifications: 'Coloca un bloque o cojín bajo el sacro para soporte y menor esfuerzo muscular.',
         videoUrl: 'https://www.youtube.com/watch?v=H-luTmFk-h0',
         image: 'https://www.sportlife.es/uploads/s1/75/69/29/5/5d38604d0ee6949b4934991d-beneficios-de-la-postura-del-puente-o-medio-puente-setu-bandha-sarvangasana.jpeg',
-        defaultDuration: 5
+        defaultDuration: 5,
+        difficulty: 'intermedio'
       },
       {
         id: 9,
@@ -117,7 +127,8 @@ const THERAPY_DATA = {
         modifications: 'Deja las manos en las caderas o apoya la espalda contra la pared para control de la profundidad.',
         videoUrl: 'https://m.youtube.com/watch?v=QPD8S5g9CwA',
         image: 'https://cdn.xuanlanyoga.com/wp-content/uploads/2020/12/ustrasana-1200x900.jpg',
-        defaultDuration: 3
+        defaultDuration: 4,
+        difficulty: 'avanzado'
       },
       {
         id: 10,
@@ -128,7 +139,8 @@ const THERAPY_DATA = {
         modifications: 'Flexiona las rodillas o usa una cinta alrededor de los pies para poder sostenerte mejor.',
         videoUrl: 'https://www.youtube.com/watch?v=WUitD3qgv84',
         image: 'https://cdn.xuanlanyoga.com/wp-content/uploads/2016/02/paschimottanasana.jpg',
-        defaultDuration: 5
+        defaultDuration: 6,
+        difficulty: 'intermedio'
       },
       {
         id: 11,
@@ -139,7 +151,8 @@ const THERAPY_DATA = {
         modifications: 'Apoya la cabeza sobre un cojín o bloque para mayor confort cervical.',
         videoUrl: 'https://www.youtube.com/watch?v=fg9rJq_yep8',
         image: 'https://www.sportlife.es/uploads/s1/97/10/97/2/postura-del-pez-o-matsyasana-para-principiantes_7_1200x690.jpeg',
-        defaultDuration: 3
+        defaultDuration: 5,
+        difficulty: 'intermedio'
       },
       {
         id: 12,
@@ -150,17 +163,18 @@ const THERAPY_DATA = {
         modifications: 'Apoya las manos en bloques o una silla para reducir la carga en muñecas y hombros.',
         videoUrl: 'https://www.youtube.com/watch?v=G74sC-56ops',
         image: 'https://guiafitness.com/wp-content/uploads/postura-del-perro-boca-abajo.jpg',
-        defaultDuration: 3
+        defaultDuration: 4,
+        difficulty: 'intermedio'
       }
     ]
   },
 
   back_pain: {
     id: 'back_pain',
-    name: 'Yoga para Dolor de Espalda',
-    description: 'Serie terapéutica diseñada para aliviar el dolor de espalda y fortalecer la musculatura',
-    icon: '🏋️‍♀️',
-    color: '#38a169',
+    name: 'Dolor de Espalda',
+    description: 'Secuencia terapéutica para aliviar y prevenir el dolor de espalda',
+    color: '#4ecdc4',
+    icon: '🔥',
     postures: [
       {
         id: 13,
@@ -171,7 +185,8 @@ const THERAPY_DATA = {
         modifications: 'Separa más las rodillas o coloca cojines bajo el torso según necesites.',
         videoUrl: 'https://www.youtube.com/watch?v=wzQqaCiYCqs',
         image: 'https://resizer.glanacion.com/resizer/v2/contraindicaciones-la-instructora-asegura-que-no-K5MAD4UHDNAJJBYROTJSKDXGBY.jpg?auth=cd912d33fbfa6f1cc2350bd2104bcfc72d6c7efbc0eed3e7e33f6682ca8f2220&width=420&height=280&quality=70&smart=true',
-        defaultDuration: 5
+        defaultDuration: 6,
+        difficulty: 'principiante'
       },
       {
         id: 14,
@@ -182,7 +197,8 @@ const THERAPY_DATA = {
         modifications: 'Abraza una rodilla a la vez si sientes incomodidad al juntar ambas.',
         videoUrl: 'https://www.youtube.com/watch?v=Y9G2GpODWmk',
         image: 'https://gourmetdemexico.com.mx/wp-content/uploads/2016/06/postura-yoga-apanasana-rodillas-en-el-pecho-300x200.jpg',
-        defaultDuration: 5
+        defaultDuration: 4,
+        difficulty: 'principiante'
       },
       {
         id: 15,
@@ -193,7 +209,8 @@ const THERAPY_DATA = {
         modifications: 'Mantén los codos doblados para evitar sobreextender la zona baja.',
         videoUrl: 'https://www.youtube.com/watch?v=9DN7TheUAto',
         image: 'https://www.vikika.es/blog/wp-content/uploads/2021/07/postura-cobra.jpg',
-        defaultDuration: 3
+        defaultDuration: 3,
+        difficulty: 'principiante'
       },
       {
         id: 16,
@@ -204,7 +221,8 @@ const THERAPY_DATA = {
         modifications: 'Flexiona ligeramente las rodillas y usa bloques bajo las manos si no llegas al suelo.',
         videoUrl: 'https://www.youtube.com/watch?v=n2uowGJZ3vg',
         image: 'https://cdn.xuanlanyoga.com/wp-content/uploads/2022/06/uttanasana-postura-de-la-pinza-yoga-1200x900.jpg',
-        defaultDuration: 3
+        defaultDuration: 5,
+        difficulty: 'intermedio'
       },
       {
         id: 17,
@@ -215,7 +233,8 @@ const THERAPY_DATA = {
         modifications: 'Coloca un bloque bajo el sacro para soporte extra.',
         videoUrl: 'https://www.youtube.com/watch?v=JMiMsJt7C88',
         image: 'https://www.sportlife.es/uploads/s1/75/69/29/5/5d38604d0ee6949b4934991d-beneficios-de-la-postura-del-puente-o-medio-puente-setu-bandha-sarvangasana.jpeg',
-        defaultDuration: 5
+        defaultDuration: 4,
+        difficulty: 'intermedio'
       },
       {
         id: 18,
@@ -226,26 +245,219 @@ const THERAPY_DATA = {
         modifications: 'Muévete lentamente y dentro de un rango cómodo de movimiento.',
         videoUrl: 'https://www.youtube.com/watch?v=yMjXE5Nk6vs',
         image: 'https://cdn.xuanlanyoga.com/wp-content/uploads/2022/04/gato-vaca-yoga.jpg',
-        defaultDuration: 5
+        defaultDuration: 3,
+        difficulty: 'principiante'
       }
     ]
   }
 };
 
-// Función para obtener el ID de video de YouTube
-function getYouTubeVideoId(url) {
-  const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
-  const match = url.match(regex);
-  return match ? match[1] : null;
-}
+// Configuraciones predefinidas de series
+const PRESET_SERIES = [
+  {
+    id: 'anxiety-beginner',
+    name: 'Calma Mental - Principiante',
+    description: 'Serie suave para reducir ansiedad y estrés',
+    therapyType: 'anxiety',
+    level: 'principiante',
+    duration: 20,
+    postures: [1, 2, 4, 5, 6],
+    isPublic: true
+  },
+  {
+    id: 'arthritis-gentle',
+    name: 'Movilidad Articular Suave',
+    description: 'Mejora la flexibilidad y reduce la rigidez',
+    therapyType: 'arthritis',
+    level: 'principiante',
+    duration: 25,
+    postures: [7, 8, 10, 11],
+    isPublic: true
+  },
+  {
+    id: 'back-pain-relief',
+    name: 'Alivio Dolor de Espalda',
+    description: 'Secuencia terapéutica para la espalda',
+    therapyType: 'back_pain',
+    level: 'principiante',
+    duration: 22,
+    postures: [13, 14, 15, 17, 18],
+    isPublic: true
+  },
+  {
+    id: 'anxiety-intermediate',
+    name: 'Equilibrio Mental - Intermedio',
+    description: 'Práctica más profunda para calmar la mente',
+    therapyType: 'anxiety',
+    level: 'intermedio',
+    duration: 35,
+    postures: [1, 2, 3, 4, 5, 6],
+    isPublic: true
+  },
+  {
+    id: 'complete-mobility',
+    name: 'Movilidad Completa',
+    description: 'Secuencia integral para artritis avanzada',
+    therapyType: 'arthritis',
+    level: 'intermedio',
+    duration: 40,
+    postures: [7, 8, 9, 10, 11, 12],
+    isPublic: true
+  }
+];
 
-// Función para crear embed URL
-function getYouTubeEmbedUrl(url) {
-  const videoId = getYouTubeVideoId(url);
-  return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
-}
+// Utilidades para trabajar con los datos
+const TherapyDataUtils = {
+  // Obtener todas las terapias
+  getAllTherapies() {
+    return Object.values(THERAPY_DATA);
+  },
 
-// Exportar datos
+  // Obtener terapia por ID
+  getTherapyById(id) {
+    return THERAPY_DATA[id] || null;
+  },
+
+  // Obtener postura por ID
+  getPostureById(postureId) {
+    for (const therapy of Object.values(THERAPY_DATA)) {
+      const posture = therapy.postures.find(p => p.id === postureId);
+      if (posture) {
+        return { ...posture, therapyType: therapy.id };
+      }
+    }
+    return null;
+  },
+
+  // Obtener posturas por terapia
+  getPosturesByTherapy(therapyId) {
+    const therapy = this.getTherapyById(therapyId);
+    return therapy ? therapy.postures : [];
+  },
+
+  // Obtener series predefinidas
+  getPresetSeries() {
+    return PRESET_SERIES;
+  },
+
+  // Obtener series por nivel
+  getSeriesByLevel(level) {
+    return PRESET_SERIES.filter(series => series.level === level);
+  },
+
+  // Obtener series por tipo de terapia
+  getSeriesByTherapy(therapyType) {
+    return PRESET_SERIES.filter(series => series.therapyType === therapyType);
+  },
+
+  // Crear serie personalizada a partir de posturas
+  createCustomSeries(name, description, postureIds, duration) {
+    const postures = postureIds.map(id => this.getPostureById(id)).filter(Boolean);
+    const therapyTypes = [...new Set(postures.map(p => p.therapyType))];
+    
+    return {
+      id: `custom-${Date.now()}`,
+      name,
+      description,
+      therapyType: therapyTypes.length === 1 ? therapyTypes[0] : 'mixed',
+      level: this.calculateDifficulty(postures),
+      duration: duration || this.calculateDuration(postures),
+      postures: postureIds,
+      isCustom: true,
+      createdAt: new Date()
+    };
+  },
+
+  // Calcular dificultad basada en las posturas
+  calculateDifficulty(postures) {
+    const difficulties = postures.map(p => p.difficulty);
+    const hasAdvanced = difficulties.includes('avanzado');
+    const hasIntermediate = difficulties.includes('intermedio');
+    
+    if (hasAdvanced) return 'avanzado';
+    if (hasIntermediate) return 'intermedio';
+    return 'principiante';
+  },
+
+  // Calcular duración total estimada
+  calculateDuration(postures) {
+    return postures.reduce((total, posture) => total + (posture.defaultDuration || 3), 0);
+  },
+
+  // Filtrar posturas por dificultad
+  getPosturesByDifficulty(difficulty) {
+    const allPostures = [];
+    Object.values(THERAPY_DATA).forEach(therapy => {
+      therapy.postures.forEach(posture => {
+        if (posture.difficulty === difficulty) {
+          allPostures.push({ ...posture, therapyType: therapy.id });
+        }
+      });
+    });
+    return allPostures;
+  },
+
+  // Buscar posturas por nombre o beneficios
+  searchPostures(query) {
+    const allPostures = [];
+    const searchTerm = query.toLowerCase();
+    
+    Object.values(THERAPY_DATA).forEach(therapy => {
+      therapy.postures.forEach(posture => {
+        const matchesName = posture.name.toLowerCase().includes(searchTerm);
+        const matchesSanskrit = posture.sanskrit.toLowerCase().includes(searchTerm);
+        const matchesBenefits = posture.benefits.toLowerCase().includes(searchTerm);
+        
+        if (matchesName || matchesSanskrit || matchesBenefits) {
+          allPostures.push({ ...posture, therapyType: therapy.id });
+        }
+      });
+    });
+    
+    return allPostures;
+  },
+
+  // Generar secuencia recomendada
+  generateRecommendedSequence(therapyType, level, duration) {
+    const therapy = this.getTherapyById(therapyType);
+    if (!therapy) return null;
+
+    let postures = therapy.postures.filter(p => {
+      if (level === 'principiante') return p.difficulty !== 'avanzado';
+      if (level === 'intermedio') return p.difficulty !== 'avanzado';
+      return true; // Para avanzado, incluir todas
+    });
+
+    // Ordenar por dificultad y duración
+    postures.sort((a, b) => {
+      const difficultyOrder = { 'principiante': 1, 'intermedio': 2, 'avanzado': 3 };
+      return difficultyOrder[a.difficulty] - difficultyOrder[b.difficulty];
+    });
+
+    // Seleccionar posturas que encajen en la duración
+    const selectedPostures = [];
+    let totalDuration = 0;
+
+    for (const posture of postures) {
+      if (totalDuration + posture.defaultDuration <= duration) {
+        selectedPostures.push(posture);
+        totalDuration += posture.defaultDuration;
+      }
+    }
+
+    return this.createCustomSeries(
+      `Secuencia ${therapy.name} - ${level}`,
+      `Secuencia recomendada de ${duration} minutos`,
+      selectedPostures.map(p => p.id),
+      duration
+    );
+  }
+};
+
+// Hacer disponible globalmente
 window.THERAPY_DATA = THERAPY_DATA;
-window.getYouTubeVideoId = getYouTubeVideoId;
-window.getYouTubeEmbedUrl = getYouTubeEmbedUrl;
+window.PRESET_SERIES = PRESET_SERIES;
+window.TherapyDataUtils = TherapyDataUtils;
+
+console.log('🧘‍♀️ Datos de terapias cargados:', Object.keys(THERAPY_DATA).length, 'terapias');
+console.log('📋 Series predefinidas cargadas:', PRESET_SERIES.length, 'series');

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Icon Generator - SoftZen</title>
+</head>
+<body>
+    <h1>Generando íconos para SoftZen...</h1>
+    <canvas id="canvas192" width="192" height="192" style="border: 1px solid #ccc; margin: 10px;"></canvas>
+    <canvas id="canvas512" width="512" height="512" style="border: 1px solid #ccc; margin: 10px;"></canvas>
+    
+    <script>
+        function createIcon(size, canvasId) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            
+            // Limpiar canvas
+            ctx.clearRect(0, 0, size, size);
+            
+            // Fondo con gradiente
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#8B7CF6');
+            gradient.addColorStop(1, '#6366F1');
+            
+            // Dibujar fondo con bordes redondeados
+            ctx.fillStyle = gradient;
+            const radius = size * 0.125; // 12.5% del tamaño
+            ctx.beginPath();
+            ctx.roundRect(0, 0, size, size, radius);
+            ctx.fill();
+            
+            // Dibujar emoji de yoga (persona meditando)
+            ctx.font = `${size * 0.4}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('🧘‍♀️', size / 2, size / 2 - size * 0.05);
+            
+            // Texto SoftZen
+            ctx.font = `bold ${size * 0.08}px Arial`;
+            ctx.fillStyle = 'white';
+            ctx.textAlign = 'center';
+            ctx.fillText('SoftZen', size / 2, size * 0.88);
+            
+            return canvas;
+        }
+        
+        // Función para descargar como PNG
+        function downloadCanvas(canvas, filename) {
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+        
+        // Generar íconos
+        const canvas192 = createIcon(192, 'canvas192');
+        const canvas512 = createIcon(512, 'canvas512');
+        
+        // Auto-descargar después de 2 segundos
+        setTimeout(() => {
+            downloadCanvas(canvas192, 'icon-192.png');
+            setTimeout(() => {
+                downloadCanvas(canvas512, 'icon-512.png');
+            }, 500);
+        }, 2000);
+        
+        console.log('Íconos generados. Se descargarán automáticamente.');
+    </script>
+</body>
+</html>

@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧹 Limpieza y Verificación - SoftZen</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .status {
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-weight: bold;
+            text-align: center;
+        }
+        .status.error {
+            background: rgba(255, 75, 75, 0.3);
+            border: 2px solid #ff4b4b;
+        }
+        .status.success {
+            background: rgba(75, 255, 75, 0.3);
+            border: 2px solid #4bff4b;
+        }
+        .status.warning {
+            background: rgba(255, 193, 7, 0.3);
+            border: 2px solid #ffc107;
+        }
+        .status.info {
+            background: rgba(75, 150, 255, 0.3);
+            border: 2px solid #4b96ff;
+        }
+        .button {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        .button.secondary {
+            background: linear-gradient(45deg, #4b6cb7, #182848);
+        }
+        .button.success {
+            background: linear-gradient(45deg, #56ab2f, #a8e6cf);
+        }
+        .actions {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .log {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 20px 0;
+        }
+        .step {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #4bff4b;
+        }
+        .step h3 {
+            margin-top: 0;
+            color: #4bff4b;
+        }
+        .progress {
+            width: 100%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #4bff4b, #00d2ff);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧹 Limpieza y Reparación - SoftZen</h1>
+        
+        <div id="currentStatus" class="status info">
+            🔍 Verificando estado actual de la aplicación...
+        </div>
+        
+        <div class="progress">
+            <div id="progressBar" class="progress-bar"></div>
+        </div>
+        
+        <div class="actions">
+            <button class="button" onclick="diagnosticar()">
+                🔍 Diagnosticar Problemas
+            </button>
+            <button class="button" onclick="limpiarTodo()">
+                🧹 Limpiar Datos Corruptos
+            </button>
+            <button class="button secondary" onclick="verificarFirebase()">
+                🔥 Verificar Firebase
+            </button>
+            <button class="button success" onclick="abrirAplicacion()">
+                🚀 Abrir SoftZen
+            </button>
+        </div>
+        
+        <div id="logContainer" class="log" style="display: none;">
+            <div id="logContent"></div>
+        </div>
+        
+        <div class="step">
+            <h3>📋 Pasos para solucionar el problema</h3>
+            <ol>
+                <li><strong>Diagnosticar:</strong> Identifica qué está causando el problema</li>
+                <li><strong>Limpiar:</strong> Elimina datos corruptos de Firebase</li>
+                <li><strong>Verificar:</strong> Confirma que Firebase esté funcionando</li>
+                <li><strong>Abrir:</strong> Prueba la aplicación SoftZen</li>
+            </ol>
+        </div>
+        
+        <div class="step">
+            <h3>🔑 Credenciales de Prueba</h3>
+            <p><strong>Instructor:</strong> admin@softzen.com / SoftZen2024</p>
+            <p><strong>Paciente:</strong> paciente@softzen.com / SoftZen2024</p>
+        </div>
+    </div>
+
+    <script>
+        let logContainer = document.getElementById('logContainer');
+        let logContent = document.getElementById('logContent');
+        let statusEl = document.getElementById('currentStatus');
+        let progressBar = document.getElementById('progressBar');
+        
+        function log(message, type = 'info') {
+            logContainer.style.display = 'block';
+            const timestamp = new Date().toLocaleTimeString();
+            const color = {
+                'info': '#4bff4b',
+                'warn': '#ffc107',
+                'error': '#ff4b4b',
+                'success': '#00d2ff'
+            }[type] || '#ffffff';
+            
+            logContent.innerHTML += `<div style="color: ${color};">[${timestamp}] ${message}</div>`;
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+        
+        function updateStatus(message, type = 'info') {
+            statusEl.textContent = message;
+            statusEl.className = `status ${type}`;
+        }
+        
+        function updateProgress(percent) {
+            progressBar.style.width = percent + '%';
+        }
+        
+        async function diagnosticar() {
+            updateStatus('🔍 Diagnosticando problemas...', 'info');
+            updateProgress(10);
+            log('Iniciando diagnóstico completo...', 'info');
+            
+            try {
+                // Verificar localStorage
+                updateProgress(25);
+                log('Verificando localStorage...', 'info');
+                const localStorageItems = Object.keys(localStorage).filter(key => 
+                    key.includes('firebase') || key.includes('firestore')
+                );
+                if (localStorageItems.length > 0) {
+                    log(`⚠️ Encontrados ${localStorageItems.length} elementos Firebase en localStorage`, 'warn');
+                } else {
+                    log('✅ localStorage limpio', 'success');
+                }
+                
+                // Verificar IndexedDB
+                updateProgress(50);
+                log('Verificando IndexedDB...', 'info');
+                if ('indexedDB' in window) {
+                    // Intentar detectar bases de datos de Firebase
+                    const dbNames = [
+                        'firebase-auth-db',
+                        'firebaseLocalStorageDb',
+                        'firebase-messaging-database'
+                    ];
+                    
+                    for (const dbName of dbNames) {
+                        try {
+                            await new Promise((resolve, reject) => {
+                                const request = indexedDB.open(dbName);
+                                request.onsuccess = () => {
+                                    log(`⚠️ Base de datos encontrada: ${dbName}`, 'warn');
+                                    request.result.close();
+                                    resolve();
+                                };
+                                request.onerror = () => {
+                                    log(`✅ Base de datos no existe: ${dbName}`, 'info');
+                                    resolve();
+                                };
+                            });
+                        } catch (error) {
+                            log(`Error verificando ${dbName}: ${error.message}`, 'error');
+                        }
+                    }
+                } else {
+                    log('❌ IndexedDB no soportado', 'error');
+                }
+                
+                // Verificar disponibilidad de Firebase
+                updateProgress(75);
+                log('Verificando disponibilidad de Firebase...', 'info');
+                if (typeof firebase !== 'undefined') {
+                    log('✅ Firebase SDK disponible', 'success');
+                } else {
+                    log('❌ Firebase SDK no disponible', 'error');
+                }
+                
+                updateProgress(100);
+                updateStatus('✅ Diagnóstico completado', 'success');
+                log('Diagnóstico completado. Revisa los resultados arriba.', 'success');
+                
+            } catch (error) {
+                log(`❌ Error durante diagnóstico: ${error.message}`, 'error');
+                updateStatus('❌ Error en diagnóstico', 'error');
+            }
+        }
+        
+        async function limpiarTodo() {
+            updateStatus('🧹 Limpiando datos corruptos...', 'warning');
+            updateProgress(0);
+            log('Iniciando limpieza completa de datos...', 'info');
+            
+            try {
+                // Limpiar localStorage
+                updateProgress(25);
+                log('Limpiando localStorage...', 'info');
+                const beforeCount = localStorage.length;
+                localStorage.clear();
+                log(`✅ localStorage limpiado (${beforeCount} elementos eliminados)`, 'success');
+                
+                // Limpiar sessionStorage
+                updateProgress(40);
+                log('Limpiando sessionStorage...', 'info');
+                sessionStorage.clear();
+                log('✅ sessionStorage limpiado', 'success');
+                
+                // Limpiar IndexedDB
+                updateProgress(60);
+                log('Limpiando IndexedDB...', 'info');
+                if ('indexedDB' in window) {
+                    const dbNames = [
+                        'firebase-auth-db',
+                        'firebaseLocalStorageDb',
+                        'firebase-messaging-database',
+                        'firebase-heartbeat-store',
+                        'firebase-installations-store'
+                    ];
+                    
+                    for (const dbName of dbNames) {
+                        try {
+                            await new Promise((resolve) => {
+                                const deleteReq = indexedDB.deleteDatabase(dbName);
+                                deleteReq.onsuccess = () => {
+                                    log(`✅ Base de datos eliminada: ${dbName}`, 'success');
+                                    resolve();
+                                };
+                                deleteReq.onerror = () => {
+                                    log(`⚠️ No se pudo eliminar: ${dbName}`, 'warn');
+                                    resolve();
+                                };
+                                deleteReq.onblocked = () => {
+                                    log(`⚠️ Eliminación bloqueada: ${dbName}`, 'warn');
+                                    resolve();
+                                };
+                            });
+                        } catch (error) {
+                            log(`Error eliminando ${dbName}: ${error.message}`, 'error');
+                        }
+                    }
+                } else {
+                    log('⚠️ IndexedDB no disponible', 'warn');
+                }
+                
+                updateProgress(100);
+                updateStatus('✅ Limpieza completada exitosamente', 'success');
+                log('🎉 Limpieza completada. La aplicación debería funcionar ahora.', 'success');
+                log('💡 Recarga la página de SoftZen para aplicar los cambios.', 'info');
+                
+            } catch (error) {
+                log(`❌ Error durante limpieza: ${error.message}`, 'error');
+                updateStatus('❌ Error en limpieza', 'error');
+            }
+        }
+        
+        async function verificarFirebase() {
+            updateStatus('🔥 Verificando Firebase...', 'info');
+            updateProgress(0);
+            log('Verificando conectividad con Firebase...', 'info');
+            
+            try {
+                updateProgress(30);
+                
+                // Verificar si Firebase está disponible
+                if (typeof firebase === 'undefined') {
+                    log('❌ Firebase SDK no está cargado', 'error');
+                    updateStatus('❌ Firebase no disponible', 'error');
+                    return;
+                }
+                
+                updateProgress(60);
+                log('✅ Firebase SDK disponible', 'success');
+                
+                // Intentar inicializar Firebase con la configuración de SoftZen
+                const firebaseConfig = {
+                    apiKey: "AIzaSyBJeqVMFusCntqBhA5RLlM5XSgsV_hOf38",
+                    authDomain: "pagina-yoga.firebaseapp.com",
+                    projectId: "pagina-yoga",
+                    storageBucket: "pagina-yoga.firebasestorage.app",
+                    messagingSenderId: "292008599562",
+                    appId: "1:292008599562:web:6b9a8e795306e32c7dbff3"
+                };
+                
+                updateProgress(80);
+                
+                try {
+                    if (!firebase.apps.length) {
+                        firebase.initializeApp(firebaseConfig);
+                    }
+                    log('✅ Firebase inicializado correctamente', 'success');
+                } catch (initError) {
+                    if (initError.code === 'app/duplicate-app') {
+                        log('✅ Firebase ya estaba inicializado', 'success');
+                    } else {
+                        throw initError;
+                    }
+                }
+                
+                updateProgress(100);
+                updateStatus('✅ Firebase funcionando correctamente', 'success');
+                log('🎉 Firebase está funcionando. La aplicación debería cargar correctamente.', 'success');
+                
+            } catch (error) {
+                log(`❌ Error verificando Firebase: ${error.message}`, 'error');
+                updateStatus('❌ Error en Firebase', 'error');
+            }
+        }
+        
+        function abrirAplicacion() {
+            log('🚀 Abriendo SoftZen...', 'info');
+            updateStatus('🚀 Abriendo aplicación...', 'info');
+            
+            // Intentar abrir en la misma ventana
+            window.location.href = 'frontend/index.html';
+        }
+        
+        // Auto-diagnóstico al cargar
+        window.onload = function() {
+            setTimeout(() => {
+                diagnosticar();
+            }, 1000);
+        };
+    </script>
+</body>
+</html>

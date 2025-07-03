@@ -123,12 +123,12 @@ Sistema profesional de gestión de yoga terapéutico con seguimiento personaliza
 ```javascript
 // frontend/js/firebase-config.js
 const firebaseConfig = {
-  apiKey: "tu-api-key",
-  authDomain: "tu-proyecto.firebaseapp.com",
-  projectId: "tu-proyecto",
-  storageBucket: "tu-proyecto.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "tu-app-id"
+  apiKey: \"tu-api-key\",
+  authDomain: \"tu-proyecto.firebaseapp.com\",
+  projectId: \"tu-proyecto\",
+  storageBucket: \"tu-proyecto.appspot.com\",
+  messagingSenderId: \"123456789\",
+  appId: \"tu-app-id\"
 };
 ```
 
