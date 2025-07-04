@@ -384,11 +384,14 @@ async function handleRegister() {
             userData.condition = formData.condition;
             userData.painLevel = 5; // Nivel inicial de dolor
             userData.sessionsCompleted = 0;
+            userData.assignedTherapies = []; // Array vacío para terapias asignadas
+            userData.instructorId = null; // Sin instructor asignado inicialmente
         } else if (formData.userType === 'instructor') {
             userData.specialization = formData.specialization;
             userData.experience = parseInt(formData.experience);
             userData.patientsCount = 0;
             userData.isVerified = false; // Requiere verificación admin
+            userData.assignedPatients = []; // Array vacío para pacientes asignados
         }
         
         // Guardar datos en Firestore
@@ -503,6 +506,20 @@ async function handleAuthSuccess(user) {
         
         // Actualizar UI con datos del usuario
         updateUserUI(user);
+        
+        // Ocultar elementos específicos según el tipo de usuario
+        if (user.userType === 'patient') {
+            // Ocultar todas las opciones solo para instructores
+            document.querySelectorAll('.instructor-only').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            // Ocultar específicamente la sección de usuarios
+            const usersNavItem = document.querySelector('[data-section="users"]');
+            if (usersNavItem) {
+                usersNavItem.style.display = 'none';
+            }
+        }
         
         // Inicializar dashboard con reintentos
         await initializeDashboardWithRetry(user);

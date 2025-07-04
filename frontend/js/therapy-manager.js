@@ -583,6 +583,219 @@ class TherapyManager {
         }
     }
 
+    showAssignTherapyModal(patientId) {
+        const patient = window.patientManager?.patients.find(p => p.id === patientId);
+        if (!patient) {
+            window.showError('Paciente no encontrado');
+            return;
+        }
+        
+        const modal = document.createElement('div');
+        modal.className = 'modal-overlay';
+        modal.innerHTML = `
+            <div class="modal-content assign-therapy-modal">
+                <div class="modal-header">
+                    <h2>Asignar Terapia a ${patient.name}</h2>
+                    <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">&times;</button>
+                </div>
+                
+                <div class="assign-therapy-content">
+                    <div class="patient-summary">
+                        <h4>Información del Paciente</h4>
+                        <p><strong>Condición:</strong> ${window.patientManager?.getConditionName(patient.condition)}</p>
+                        <p><strong>Nivel de dolor:</strong> ${patient.painLevel}/10</p>
+                        <p><strong>Objetivos:</strong> ${patient.goals || 'No especificados'}</p>
+                    </div>
+                    
+                    <div class="therapy-selection">
+                        <h4>Seleccionar Serie Terapéutica</h4>
+                        <div class="series-list" id="availableSeriesList">
+                            ${this.renderAvailableSeries(patient)}
+                        </div>
+                    </div>
+                    
+                    <div class="assignment-config">
+                        <h4>Configuración de la Asignación</h4>
+                        <form id="assignmentForm">
+                            <div class="form-group">
+                                <label for="startDate">Fecha de inicio</label>
+                                <input type="date" id="startDate" class="form-input" 
+                                    value="${new Date().toISOString().split('T')[0]}" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="endDate">Fecha de finalización (opcional)</label>
+                                <input type="date" id="endDate" class="form-input">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="frequency">Frecuencia semanal</label>
+                                <select id="frequency" class="form-select" required>
+                                    <option value="1">1 vez por semana</option>
+                                    <option value="2">2 veces por semana</option>
+                                    <option value="3" selected>3 veces por semana</option>
+                                    <option value="4">4 veces por semana</option>
+                                    <option value="5">5 veces por semana</option>
+                                    <option value="7">Diaria</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="assignmentNotes">Notas para el paciente</label>
+                                <textarea id="assignmentNotes" class="form-textarea" 
+                                    placeholder="Instrucciones especiales o recomendaciones" rows="3"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button class="btn-secondary" onclick="this.closest('.modal-overlay').remove()">
+                        Cancelar
+                    </button>
+                    <button class="btn-primary" id="confirmAssignBtn" onclick="window.therapyManager.confirmAssignment('${patientId}')" disabled>
+                        ✅ Asignar Terapia
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Configurar eventos de selección
+        this.setupSeriesSelection();
+    }
+
+    renderAvailableSeries(patient) {
+        // Obtener series predefinidas recomendadas
+        const recommendedSeries = window.PRESET_SERIES?.filter(series => 
+            series.therapyType === patient.condition || series.therapyType === 'general'
+        ) || [];
+        
+        // Obtener series personalizadas del instructor
+        const customSeriesHTML = this.renderCustomSeries();
+        
+        return `
+            <div class="series-section">
+                <h5>Series Recomendadas</h5>
+                <div class="series-options">
+                    ${recommendedSeries.map(series => `
+                        <div class="series-option" data-series-id="${series.id}">
+                            <input type="radio" name="selectedSeries" value="${series.id}" 
+                                id="series_${series.id}" onchange="window.therapyManager.selectSeries('${series.id}')">
+                            <label for="series_${series.id}">
+                                <h6>${series.name}</h6>
+                                <p>${series.description}</p>
+                                <div class="series-meta">
+                                    <span>⏱️ ${series.duration} min</span>
+                                    <span>📊 ${series.level}</span>
+                                    <span>🧘 ${series.postures.length} posturas</span>
+                                </div>
+                            </label>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+            ${customSeriesHTML}
+        `;
+    }
+
+    async renderCustomSeries() {
+        try {
+            const snapshot = await firebase.firestore()
+                .collection('therapy_series')
+                .where('createdBy', '==', firebase.auth().currentUser.uid)
+                .get();
+            
+            if (snapshot.empty) return '';
+            
+            const customSeries = [];
+            snapshot.forEach(doc => {
+                customSeries.push({ id: doc.id, ...doc.data() });
+            });
+            
+            return `
+                <div class="series-section">
+                    <h5>Mis Series Personalizadas</h5>
+                    <div class="series-options">
+                        ${customSeries.map(series => `
+                            <div class="series-option" data-series-id="${series.id}">
+                                <input type="radio" name="selectedSeries" value="${series.id}" 
+                                    id="series_${series.id}" onchange="window.therapyManager.selectSeries('${series.id}')">
+                                <label for="series_${series.id}">
+                                    <h6>${series.name}</h6>
+                                    <p>${series.description}</p>
+                                    <div class="series-meta">
+                                        <span>⏱️ ${series.totalDuration} min</span>
+                                        <span>📊 ${series.difficulty}</span>
+                                    </div>
+                                </label>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        } catch (error) {
+            console.error('[TherapyManager] Error cargando series personalizadas:', error);
+            return '';
+        }
+    }
+
+    selectSeries(seriesId) {
+        this.selectedSeriesId = seriesId;
+        document.getElementById('confirmAssignBtn').disabled = false;
+    }
+
+    async confirmAssignment(patientId) {
+        try {
+            if (!this.selectedSeriesId) {
+                window.showError('Por favor selecciona una serie terapéutica');
+                return;
+            }
+            
+            const assignmentData = {
+                patientId: patientId,
+                seriesId: this.selectedSeriesId,
+                assignedBy: firebase.auth().currentUser.uid,
+                assignedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                startDate: document.getElementById('startDate').value,
+                endDate: document.getElementById('endDate').value || null,
+                frequency: parseInt(document.getElementById('frequency').value),
+                notes: document.getElementById('assignmentNotes').value.trim(),
+                status: 'active',
+                progress: 0,
+                completedSessions: 0,
+                totalSessions: 0 // Se calculará basado en la frecuencia y duración
+            };
+            
+            // Guardar asignación
+            await firebase.firestore().collection('therapy_assignments').add(assignmentData);
+            
+            // Actualizar el array de terapias asignadas del paciente
+            await firebase.firestore().collection('users').doc(patientId).update({
+                assignedTherapies: firebase.firestore.FieldValue.arrayUnion(this.selectedSeriesId),
+                lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            
+            // Cerrar modal
+            document.querySelector('.modal-overlay').remove();
+            
+            // Notificar éxito
+            window.notificationSystem?.show({
+                type: 'success',
+                title: '¡Terapia Asignada!',
+                message: 'La serie terapéutica ha sido asignada exitosamente al paciente',
+                duration: 5000
+            });
+            
+            console.log('[TherapyManager] Terapia asignada exitosamente');
+            
+        } catch (error) {
+            console.error('[TherapyManager] Error asignando terapia:', error);
+            window.showError('Error al asignar la terapia. Por favor intenta de nuevo.');
+        }
+    }
+
     // Asignar terapia a paciente
     async assignTherapyToPatient(patientId, seriesId) {
         try {

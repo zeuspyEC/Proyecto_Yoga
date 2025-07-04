@@ -289,6 +289,21 @@ class SessionManager {
             return;
         }
         
+        // Procesar URL de video de YouTube para embed
+        let videoEmbed = '';
+        if (posture.videoUrl) {
+            // Extraer ID del video de YouTube
+            const videoId = this.extractYouTubeId(posture.videoUrl);
+            if (videoId) {
+                videoEmbed = `<iframe 
+                    src="https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1" 
+                    frameborder="0" 
+                    allowfullscreen
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
+                </iframe>`;
+            }
+        }
+        
         const modal = document.createElement('div');
         modal.className = 'modal-overlay posture-modal fullscreen';
         modal.innerHTML = `
@@ -311,15 +326,7 @@ class SessionManager {
                         <p class="sanskrit">${posture.sanskrit}</p>
                         
                         <div class="video-container">
-                            ${posture.videoUrl ? `
-                                <iframe src="${posture.videoUrl}" 
-                                    frameborder="0" 
-                                    allowfullscreen
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
-                                </iframe>
-                            ` : `
-                                <img src="${posture.image}" alt="${posture.name}" class="posture-image">
-                            `}
+                            ${videoEmbed || `<img src="${posture.image}" alt="${posture.name}" class="posture-image">`}
                         </div>
                         
                         <div class="timer-container">
@@ -331,15 +338,15 @@ class SessionManager {
                                         stroke-dashoffset="565"/>
                                 </svg>
                                 <div class="timer-display">
-                                    <span id="timerMinutes">${Math.floor((posture.defaultDuration * 60) / 60)}</span>:<span id="timerSeconds">${String((posture.defaultDuration * 60) % 60).padStart(2, '0')}</span>
+                                    <span id="timerMinutes">${Math.floor(posture.defaultDuration)}</span>:<span id="timerSeconds">00</span>
                                 </div>
                             </div>
                             
                             <div class="timer-controls">
-                                <button class="btn-timer" onclick="window.sessionManager.startPostureTimer()">
+                                <button class="btn-timer" id="startTimerBtn" onclick="window.sessionManager.startPostureTimer()">
                                     ▶️ Iniciar
                                 </button>
-                                <button class="btn-timer" onclick="window.sessionManager.pauseTimer()">
+                                <button class="btn-timer" id="pauseTimerBtn" onclick="window.sessionManager.pauseTimer()" style="display:none;">
                                     ⏸️ Pausar
                                 </button>
                                 <button class="btn-timer" onclick="window.sessionManager.resetTimer()">
@@ -388,7 +395,7 @@ class SessionManager {
                     <button class="btn-secondary" onclick="window.sessionManager.skipPosture()">
                         ⏭️ Saltar Postura
                     </button>
-                    <button class="btn-primary" onclick="window.sessionManager.completePosture()">
+                    <button class="btn-primary" id="completePostureBtn" onclick="window.sessionManager.completePosture()" disabled>
                         ✅ Siguiente Postura
                     </button>
                 </div>
@@ -397,8 +404,31 @@ class SessionManager {
         
         document.body.appendChild(modal);
         
-        // Auto-iniciar timer
-        setTimeout(() => this.startPostureTimer(), 1000);
+        // Auto-iniciar timer después de 3 segundos
+        setTimeout(() => {
+            if (!this.timer) {
+                this.startPostureTimer();
+            }
+        }, 3000);
+    }
+
+    extractYouTubeId(url) {
+        if (!url) return null;
+        
+        // Patrones para extraer ID de YouTube
+        const patterns = [
+            /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/,
+            /youtube\.com\/watch\?.*v=([^&\n?#]+)/
+        ];
+        
+        for (const pattern of patterns) {
+            const match = url.match(pattern);
+            if (match && match[1]) {
+                return match[1];
+            }
+        }
+        
+        return null;
     }
 
     startPostureTimer() {
@@ -407,6 +437,13 @@ class SessionManager {
         const posture = this.sessionData.postures[this.currentPostureIndex];
         this.timeRemaining = posture.defaultDuration * 60; // Convertir a segundos
         this.isPaused = false;
+        
+        // Actualizar botones
+        document.getElementById('startTimerBtn').style.display = 'none';
+        document.getElementById('pauseTimerBtn').style.display = 'inline-block';
+        
+        // Habilitar botón de completar
+        document.getElementById('completePostureBtn').disabled = false;
         
         const timerProgress = document.querySelector('.timer-progress');
         const totalDuration = posture.defaultDuration * 60;
@@ -431,15 +468,31 @@ class SessionManager {
                 // Alertas de tiempo
                 if (this.timeRemaining === 30) {
                     this.playSound('30-seconds');
+                    window.notificationSystem?.show({
+                        type: 'info',
+                        message: '30 segundos restantes',
+                        duration: 2000
+                    });
                 } else if (this.timeRemaining === 10) {
                     this.playSound('10-seconds');
+                    window.notificationSystem?.show({
+                        type: 'warning',
+                        message: '10 segundos restantes',
+                        duration: 2000
+                    });
                 } else if (this.timeRemaining === 0) {
                     this.playSound('complete');
+                    window.notificationSystem?.show({
+                        type: 'success',
+                        message: '¡Postura completada!',
+                        duration: 3000
+                    });
                     this.completePosture();
                 }
             }
         }, 1000);
     }
+
 
     pauseTimer() {
         this.isPaused = !this.isPaused;

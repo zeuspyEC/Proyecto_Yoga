@@ -48,7 +48,21 @@ async function initializeApp() {
         
         // Esperar a que Firebase esté listo con timeout
         const firebaseReady = await waitForFirebaseWithTimeout(10000);
-        
+        firebase.auth().onAuthStateChanged(async (user) => {
+            
+        if (user) {
+            const userDoc = await firebase.firestore().collection('users').doc(user.uid).get();
+            if (userDoc.exists) {
+                const userData = userDoc.data();
+                document.body.setAttribute('data-user-type', userData.userType);
+                
+                // Si es paciente, agregar clase adicional
+                if (userData.userType === 'patient') {
+                    document.body.classList.add('patient-view');
+                }
+            }
+        }
+    });
         if (!firebaseReady) {
             console.error('[App] Firebase no se inicializó correctamente');
             showInitializationError();

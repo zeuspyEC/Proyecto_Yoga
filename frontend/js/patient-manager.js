@@ -234,7 +234,8 @@ class PatientManager {
                 sessionFrequency: document.getElementById('sessionFrequency').value,
                 userType: 'patient',
                 isActive: true,
-                instructorId: firebase.auth().currentUser.uid,
+                instructorId: firebase.auth().currentUser.uid, // Asignar al instructor actual
+                assignedTherapies: [], // Array vacío inicial
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
                 sessionsCompleted: 0,
@@ -243,45 +244,73 @@ class PatientManager {
             
             // Crear usuario en Firebase Auth con contraseña temporal
             const tempPassword = this.generateTempPassword();
-            const userCredential = await firebase.auth().createUserWithEmailAndPassword(
-                patientData.email,
-                tempPassword
-            );
             
-            // Guardar datos en Firestore
-            await firebase.firestore().collection('users').doc(userCredential.user.uid).set(patientData);
+            // Guardar el usuario actual antes de crear el nuevo
+            const currentUser = firebase.auth().currentUser;
             
-            // Enviar email con credenciales (simulado)
-            console.log('[PatientManager] Credenciales temporales:', {
-                email: patientData.email,
-                password: tempPassword
-            });
-            
-            // Agregar a la lista local
-            this.patients.push({
-                id: userCredential.user.uid,
-                ...patientData
-            });
-            
-            // Cerrar modal
-            document.querySelector('.modal-overlay').remove();
-            
-            // Notificar éxito
-            window.notificationSystem?.show({
-                type: 'success',
-                title: '¡Paciente Agregado!',
-                message: `${patientData.name} ha sido agregado exitosamente. Se ha enviado un email con las credenciales de acceso.`,
-                duration: 6000
-            });
-            
-            // Actualizar lista si estamos en la sección de usuarios
-            if (window.dashboardModule && window.dashboardModule.currentSection === 'users') {
-                window.dashboardModule.renderUsers();
+            try {
+                // Crear nuevo usuario
+                const userCredential = await firebase.auth().createUserWithEmailAndPassword(
+                    patientData.email,
+                    tempPassword
+                );
+                
+                // Guardar datos en Firestore
+                await firebase.firestore().collection('users').doc(userCredential.user.uid).set(patientData);
+                
+                // Enviar email de restablecimiento de contraseña
+                await firebase.auth().sendPasswordResetEmail(patientData.email);
+                
+                // Re-autenticar al instructor original
+                await firebase.auth().updateCurrentUser(currentUser);
+                
+                // Agregar a la lista local
+                this.patients.push({
+                    id: userCredential.user.uid,
+                    ...patientData
+                });
+                
+                // Cerrar modal
+                document.querySelector('.modal-overlay').remove();
+                
+                // Notificar éxito
+                window.notificationSystem?.show({
+                    type: 'success',
+                    title: '¡Paciente Agregado!',
+                    message: `${patientData.name} ha sido agregado exitosamente. Se ha enviado un email para que configure su contraseña.`,
+                    duration: 6000
+                });
+                
+                // Actualizar lista si estamos en la sección de usuarios
+                if (window.dashboardModule && window.dashboardModule.currentSection === 'users') {
+                    window.dashboardModule.renderUsers();
+                }
+                
+            } catch (error) {
+                // Si hay error, asegurarse de volver al usuario original
+                if (currentUser) {
+                    await firebase.auth().updateCurrentUser(currentUser);
+                }
+                throw error;
             }
             
         } catch (error) {
             console.error('[PatientManager] Error guardando paciente:', error);
             window.showError('Error al guardar el paciente: ' + error.message);
+        }
+    }
+    async assignPatientToInstructor(patientId, instructorId) {
+        try {
+            await firebase.firestore().collection('users').doc(patientId).update({
+                instructorId: instructorId,
+                lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            
+            console.log('[PatientManager] Paciente asignado al instructor');
+            return true;
+        } catch (error) {
+            console.error('[PatientManager] Error asignando paciente:', error);
+            return false;
         }
     }
 

@@ -62,14 +62,14 @@ class DashboardModule {
             // Cargar datos según el tipo de usuario
             if (this.currentUser.userType === 'instructor') {
                 await Promise.all([
-                    this.loadPatients(),
+                    this.loadInstructorPatients(), // Cambiado de loadPatients
                     this.loadAllTherapies(),
-                    this.loadAllSessions(),
+                    this.loadInstructorSessions(), // Cambiado de loadAllSessions
                     this.loadReports()
                 ]);
             } else {
                 await Promise.all([
-                    this.loadUserTherapies(),
+                    this.loadAssignedTherapies(), // Cambiado de loadUserTherapies
                     this.loadUserSessions(),
                     this.loadUserReports()
                 ]);
@@ -247,34 +247,55 @@ class DashboardModule {
         therapiesList.innerHTML = '<div class="loading">Cargando terapias...</div>';
         
         try {
-            const therapies = this.currentUser.userType === 'instructor' 
-                ? this.therapyData 
-                : this.therapyData.filter(t => t.isPublic || t.assignedTo === this.currentUser.uid);
+            let therapies;
             
-            if (therapies.length > 0) {
-                therapiesList.innerHTML = `
-                    <div class="therapies-header">
-                        <div class="search-bar">
-                            <input type="text" class="search-input" data-search-type="therapies" placeholder="Buscar terapias...">
-                            <select class="filter-select" data-filter-type="therapy-category">
-                                <option value="">Todas las categorías</option>
-                                <option value="anxiety">Ansiedad</option>
-                                <option value="back_pain">Dolor de Espalda</option>
-                                <option value="arthritis">Artritis</option>
-                                <option value="general">General</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="therapies-grid" id="therapiesGrid">
-                        ${therapies.map(therapy => this.createTherapyCard(therapy)).join('')}
-                    </div>
-                `;
-                
-                // Configurar drag & drop para las tarjetas
-                this.setupTherapyCardEvents();
+            if (this.currentUser.userType === 'instructor') {
+                // Instructores ven todas las terapias
+                therapies = this.therapyData;
             } else {
-                therapiesList.innerHTML = this.createEmptyState('terapias', 'No hay terapias disponibles');
+                // Pacientes solo ven terapias asignadas y predefinidas
+                therapies = this.therapyData.filter(t => t.isAssigned || t.isPredefined);
+                
+                // Separar por tipo
+                const assignedTherapies = therapies.filter(t => t.isAssigned);
+                const predefinedTherapies = therapies.filter(t => t.isPredefined);
+                
+                if (assignedTherapies.length > 0 || predefinedTherapies.length > 0) {
+                    therapiesList.innerHTML = `
+                        <div class="therapies-sections">
+                            ${assignedTherapies.length > 0 ? `
+                                <div class="therapy-section">
+                                    <h3>🎯 Terapias Asignadas por tu Instructor</h3>
+                                    <div class="therapies-grid">
+                                        ${assignedTherapies.map(therapy => this.createTherapyCard(therapy)).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
+                            
+                            ${predefinedTherapies.length > 0 ? `
+                                <div class="therapy-section">
+                                    <h3>📚 Terapias Disponibles</h3>
+                                    <div class="therapies-grid">
+                                        ${predefinedTherapies.map(therapy => this.createTherapyCard(therapy)).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                } else {
+                    therapiesList.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon">🧘‍♀️</div>
+                            <h3>No hay terapias asignadas</h3>
+                            <p>Tu instructor te asignará terapias personalizadas pronto</p>
+                        </div>
+                    `;
+                }
             }
+            
+            // Configurar eventos para las tarjetas
+            this.setupTherapyCardEvents();
+            
         } catch (error) {
             console.error('[Dashboard] Error renderizando terapias:', error);
             therapiesList.innerHTML = '<div class="error-message">Error al cargar las terapias</div>';
@@ -282,8 +303,12 @@ class DashboardModule {
     }
 
     createTherapyCard(therapy) {
+        const isAssigned = therapy.isAssigned || false;
+        const assignment = therapy.assignment;
+        
         return `
-            <div class="therapy-card draggable-item" draggable="true" data-therapy-id="${therapy.id}">
+            <div class="therapy-card ${isAssigned ? 'assigned-therapy' : ''}" data-therapy-id="${therapy.id}">
+                ${isAssigned ? '<div class="assigned-badge">✓ Asignada</div>' : ''}
                 <div class="therapy-image">
                     <img src="${therapy.image || '/img/default-therapy.jpg'}" alt="${therapy.name}" loading="lazy">
                     <div class="therapy-overlay">
@@ -299,7 +324,7 @@ class DashboardModule {
                         <span class="meta-item">⏱️ ${therapy.duration} min</span>
                         <span class="meta-item">🎯 ${therapy.category || 'General'}</span>
                         <span class="meta-item">📊 ${therapy.difficulty || 'Principiante'}</span>
-                        <span class="meta-item">⭐ ${therapy.rating || 'N/A'}</span>
+                        ${assignment ? `<span class="meta-item">📈 ${assignment.progress || 0}%</span>` : ''}
                     </div>
                     <div class="therapy-actions">
                         <button class="btn-primary" onclick="window.dashboardModule.startTherapy('${therapy.id}')">
@@ -591,6 +616,125 @@ class DashboardModule {
             `;
         }
     }
+
+    async loadInstructorPatients() {
+        try {
+            const instructorId = this.currentUser.uid;
+            const patientsSnapshot = await firebase.firestore()
+                .collection('users')
+                .where('userType', '==', 'patient')
+                .where('instructorId', '==', instructorId) // Solo pacientes asignados
+                .get();
+            
+            this.patients = [];
+            patientsSnapshot.forEach(doc => {
+                this.patients.push({ id: doc.id, ...doc.data() });
+            });
+            
+            console.log('[Dashboard] Pacientes del instructor cargados:', this.patients.length);
+        } catch (error) {
+            console.error('[Dashboard] Error cargando pacientes del instructor:', error);
+        }
+    }
+
+    async loadInstructorSessions() {
+        try {
+            // Cargar solo sesiones de los pacientes del instructor
+            const patientIds = this.patients.map(p => p.id);
+            if (patientIds.length === 0) {
+                this.sessions = [];
+                return;
+            }
+            
+            const sessionsSnapshot = await firebase.firestore()
+                .collection('sessions')
+                .where('userId', 'in', patientIds)
+                .orderBy('createdAt', 'desc')
+                .limit(100)
+                .get();
+            
+            this.sessions = [];
+            sessionsSnapshot.forEach(doc => {
+                this.sessions.push({ id: doc.id, ...doc.data() });
+            });
+            
+            console.log('[Dashboard] Sesiones del instructor cargadas:', this.sessions.length);
+        } catch (error) {
+            console.error('[Dashboard] Error cargando sesiones del instructor:', error);
+            this.sessions = [];
+        }
+    }
+
+    async loadAssignedTherapies() {
+        try {
+            const userId = this.currentUser.uid;
+            
+            // Primero cargar las asignaciones de terapias
+            const assignmentsSnapshot = await firebase.firestore()
+                .collection('therapy_assignments')
+                .where('patientId', '==', userId)
+                .where('status', '==', 'active')
+                .get();
+            
+            const assignedSeriesIds = [];
+            const assignments = new Map();
+            
+            assignmentsSnapshot.forEach(doc => {
+                const data = doc.data();
+                assignedSeriesIds.push(data.seriesId);
+                assignments.set(data.seriesId, { id: doc.id, ...data });
+            });
+            
+            // Cargar las series asignadas
+            this.therapyData = [];
+            
+            if (assignedSeriesIds.length > 0) {
+                const seriesSnapshot = await firebase.firestore()
+                    .collection('therapy_series')
+                    .where(firebase.firestore.FieldPath.documentId(), 'in', assignedSeriesIds)
+                    .get();
+                
+                seriesSnapshot.forEach(doc => {
+                    const seriesData = doc.data();
+                    const assignment = assignments.get(doc.id);
+                    
+                    this.therapyData.push({
+                        id: doc.id,
+                        ...seriesData,
+                        assignment: assignment,
+                        isAssigned: true
+                    });
+                });
+            }
+            
+            // También cargar terapias públicas predefinidas de THERAPY_DATA
+            if (window.THERAPY_DATA) {
+                Object.values(window.THERAPY_DATA).forEach(therapy => {
+                    therapy.postures.forEach(posture => {
+                        this.therapyData.push({
+                            id: posture.id,
+                            name: posture.name,
+                            description: posture.benefits,
+                            duration: posture.defaultDuration,
+                            category: therapy.id,
+                            difficulty: posture.difficulty,
+                            instructions: posture.instructions,
+                            videoUrl: posture.videoUrl,
+                            image: posture.image,
+                            isPublic: true,
+                            isPredefined: true
+                        });
+                    });
+                });
+            }
+            
+            console.log('[Dashboard] Terapias asignadas cargadas:', this.therapyData.length);
+        } catch (error) {
+            console.error('[Dashboard] Error cargando terapias asignadas:', error);
+            this.therapyData = [];
+        }
+    }
+
 
     async updateDashboardStats() {
         const statsContainer = document.getElementById('dashboardStats');
@@ -1321,6 +1465,16 @@ class DashboardModule {
             window.patientManager.showPatientDetails(patientId);
         } else {
             window.showInfo('Vista detallada de pacientes en desarrollo');
+        }
+    }
+
+    assignTherapy(patientId) {
+        console.log('[Dashboard] Asignar terapia al paciente:', patientId);
+        
+        if (window.therapyManager) {
+            window.therapyManager.showAssignTherapyModal(patientId);
+        } else {
+            window.showError('El módulo de gestión de terapias no está disponible');
         }
     }
 

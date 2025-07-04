@@ -74,7 +74,7 @@ class NotificationSystem {
                 <div class="notification-header">
                     <span class="notification-icon">${icon}</span>
                     <span class="notification-title">${title}</span>
-                    <button class="notification-close" onclick="window.notificationSystem.removeNotification('${id}')">&times;</button>
+                    <button class="notification-close" data-notification-id="${id}">&times;</button>
                 </div>
                 <div class="notification-message">${message}</div>
                 ${actions.length > 0 ? `
@@ -88,6 +88,15 @@ class NotificationSystem {
             <div class="notification-progress"></div>
         `;
 
+        // Agregar evento de cierre directamente al botón
+        const closeBtn = notificationEl.querySelector('.notification-close');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.removeNotification(id);
+            });
+        }
+
         const notification = {
             id,
             element: notificationEl,
@@ -97,6 +106,7 @@ class NotificationSystem {
 
         return notification;
     }
+
 
     getDefaultTitle(type) {
         const titles = {
